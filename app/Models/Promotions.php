@@ -39,7 +39,7 @@ class Promotions extends Model
 
     public function groups(): HasMany
     {
-        return $this->hasMany(Groups::class);
+        return $this->hasMany(Groups::class, 'promotion_id');
     }
 
     public function users(): BelongsToMany

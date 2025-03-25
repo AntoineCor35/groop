@@ -39,10 +39,21 @@ class EntitiesResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+                Tables\Columns\TextColumn::make('promotions_count')
+                    ->label('Promotions')
+                    ->counts('promotions')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('groups_count')
+                    ->label('Groupes')
+                    ->counts('groups')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('image.name')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -53,7 +64,9 @@ class EntitiesResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('with_promotions')
+                    ->label('Avec promotions')
+                    ->query(fn(Builder $query): Builder => $query->has('promotions')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -68,7 +81,8 @@ class EntitiesResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\PromotionsRelationManager::class,
+            RelationManagers\GroupsRelationManager::class,
         ];
     }
 

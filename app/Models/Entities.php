@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Entities extends Model
 {
@@ -35,7 +36,19 @@ class Entities extends Model
 
     public function promotions(): HasMany
     {
-        return $this->hasMany(Promotions::class);
+        return $this->hasMany(Promotions::class, 'entity_id');
+    }
+
+    public function groups(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Groups::class,
+            Promotions::class,
+            'entity_id',
+            'promotion_id',
+            'id',
+            'id'
+        );
     }
 
     public function users(): BelongsToMany

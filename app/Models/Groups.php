@@ -37,7 +37,7 @@ class Groups extends Model
 
     public function projects(): HasMany
     {
-        return $this->hasMany(Projects::class);
+        return $this->hasMany(Projects::class, 'group_id');
     }
 
     public function users(): BelongsToMany
@@ -47,7 +47,7 @@ class Groups extends Model
 
     public function promotion(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Promotions::class);
+        return $this->belongsTo(\App\Models\Promotions::class, 'promotion_id');
     }
 
     public function image(): BelongsTo

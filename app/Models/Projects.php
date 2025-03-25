@@ -123,7 +123,7 @@ class Projects extends Model implements HasMedia
 
     public function group(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Groups::class);
+        return $this->belongsTo(\App\Models\Groups::class, 'group_id');
     }
 
     public function image(): BelongsTo
