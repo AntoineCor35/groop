@@ -17,7 +17,7 @@ class ProjectsResource extends Resource
 {
     protected static ?string $model = Projects::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-light-bulb';
+    protected static ?string $navigationGroup = 'Gestion des projets';
 
     public static function form(Form $form): Form
     {
@@ -90,5 +90,10 @@ class ProjectsResource extends Resource
             'create' => Pages\CreateProjects::route('/create'),
             'edit' => Pages\EditProjects::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 }

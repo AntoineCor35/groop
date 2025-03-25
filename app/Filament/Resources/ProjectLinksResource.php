@@ -17,7 +17,7 @@ class ProjectLinksResource extends Resource
 {
     protected static ?string $model = ProjectLinks::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-link';
+    protected static ?string $navigationGroup = 'Gestion des projets';
 
     public static function form(Form $form): Form
     {

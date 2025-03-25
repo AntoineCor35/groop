@@ -17,7 +17,7 @@ class ApplicationsResource extends Resource
 {
     protected static ?string $model = Applications::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
+    protected static ?string $navigationGroup = 'Gestion des projets';
 
     public static function form(Form $form): Form
     {
@@ -83,5 +83,10 @@ class ApplicationsResource extends Resource
             'create' => Pages\CreateApplications::route('/create'),
             'edit' => Pages\EditApplications::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 }

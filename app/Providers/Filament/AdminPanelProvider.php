@@ -17,6 +17,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Navigation\NavigationGroup;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -27,18 +28,35 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration()
+            ->passwordReset()
+            ->emailVerification()
+            ->brandName('Groop')
+            ->brandLogo(asset('images/logo.png'))
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->navigationGroups([
+                NavigationGroup::make(label: 'Gestion utilisateurs')
+                    ->icon('heroicon-o-user-circle'),
+                NavigationGroup::make(label: 'Structure organisationnelle')
+                    ->icon('heroicon-o-building-office'),
+                NavigationGroup::make(label: 'Gestion des projets')
+                    ->icon('heroicon-o-light-bulb'),
+                NavigationGroup::make(label: 'Communication')
+                    ->icon('heroicon-o-chat-bubble-left-right'),
+                NavigationGroup::make(label: 'Médiathèque')
+                    ->icon('heroicon-o-photo'),
+            ])
+            ->sidebarCollapsibleOnDesktop()
             ->pages([
                 Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
