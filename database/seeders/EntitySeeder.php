@@ -39,7 +39,7 @@ class EntitySeeder extends Seeder
             Entities::create($entity);
         }
 
-        // Créer quelques entités supplémentaires avec faker
-        Entities::factory()->count(3)->create();
+        // // Créer quelques entités supplémentaires avec faker
+        // Entities::factory()->count(3)->create();
     }
 }

@@ -43,7 +43,7 @@ class ConversationSeeder extends Seeder
             Conversations::create($conversation);
         }
 
-        // Créer quelques conversations supplémentaires
-        Conversations::factory()->count(4)->create();
+        // // Créer quelques conversations supplémentaires
+        // Conversations::factory()->count(4)->create();
     }
 }

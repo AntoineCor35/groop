@@ -51,27 +51,27 @@ class User extends Authenticatable
 
     public function entities(): BelongsToMany
     {
-        return $this->belongsToMany(Entities::class);
+        return $this->belongsToMany(Entities::class, 'entities_user', 'user_id', 'entity_id');
     }
 
     public function promotions(): BelongsToMany
     {
-        return $this->belongsToMany(Promotions::class);
+        return $this->belongsToMany(Promotions::class, 'promotions_user', 'user_id', 'promotion_id');
     }
 
     public function groups(): BelongsToMany
     {
-        return $this->belongsToMany(Groups::class);
+        return $this->belongsToMany(Groups::class, 'groups_user', 'user_id', 'group_id');
     }
 
     public function projects(): BelongsToMany
     {
-        return $this->belongsToMany(Projects::class);
+        return $this->belongsToMany(Projects::class, 'projects_user', 'user_id', 'project_id');
     }
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Roles::class);
+        return $this->belongsToMany(Roles::class, 'roles_user', 'user_id', 'role_id');
     }
 
     public function avatar(): BelongsTo

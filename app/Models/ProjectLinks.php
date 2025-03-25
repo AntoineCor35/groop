@@ -17,6 +17,7 @@ class ProjectLinks extends Model
      */
     protected $fillable = [
         'project_id',
+        'title',
         'url',
         'type',
     ];
@@ -33,6 +34,6 @@ class ProjectLinks extends Model
 
     public function project(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Projects::class);
+        return $this->belongsTo(\App\Models\Projects::class, 'project_id');
     }
 }

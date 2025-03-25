@@ -54,7 +54,7 @@ class PromotionSeeder extends Seeder
             Promotions::create($promotion);
         }
 
-        // Créer quelques promotions supplémentaires avec faker
-        Promotions::factory()->count(5)->create();
+        // // Créer quelques promotions supplémentaires avec faker
+        // Promotions::factory()->count(5)->create();
     }
 }

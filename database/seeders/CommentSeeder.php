@@ -90,7 +90,7 @@ class CommentSeeder extends Seeder
             Comments::create($comment);
         }
 
-        // Créer quelques commentaires supplémentaires
-        Comments::factory()->count(20)->create();
+        // // Créer quelques commentaires supplémentaires
+        // Comments::factory()->count(20)->create();
     }
 }

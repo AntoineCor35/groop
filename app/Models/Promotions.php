@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Promotions extends Model
@@ -39,6 +40,11 @@ class Promotions extends Model
     public function groups(): HasMany
     {
         return $this->hasMany(Groups::class);
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'promotions_user', 'promotion_id', 'user_id');
     }
 
     public function parentPromotion(): BelongsTo

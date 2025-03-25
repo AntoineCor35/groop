@@ -86,7 +86,7 @@ class NotificationSeeder extends Seeder
             Notifications::create($notification);
         }
 
-        // Créer quelques notifications supplémentaires avec faker
-        Notifications::factory()->count(20)->create();
+        // // Créer quelques notifications supplémentaires avec faker
+        // Notifications::factory()->count(20)->create();
     }
 }

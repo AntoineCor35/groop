@@ -30,6 +30,6 @@ class Tags extends Model
 
     public function projects(): BelongsToMany
     {
-        return $this->belongsToMany(Projects::class);
+        return $this->belongsToMany(Projects::class, 'projects_tags', 'tag_id', 'project_id');
     }
 }

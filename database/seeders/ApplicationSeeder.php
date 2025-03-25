@@ -61,7 +61,7 @@ class ApplicationSeeder extends Seeder
             Applications::create($application);
         }
 
-        // Créer quelques applications supplémentaires
-        Applications::factory()->count(5)->create();
+        // // Créer quelques applications supplémentaires
+        // Applications::factory()->count(5)->create();
     }
 }

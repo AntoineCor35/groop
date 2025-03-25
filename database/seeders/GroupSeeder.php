@@ -55,7 +55,7 @@ class GroupSeeder extends Seeder
             Groups::create($group);
         }
 
-        // Créer quelques groupes supplémentaires avec faker
-        Groups::factory()->count(4)->create();
+        // // Créer quelques groupes supplémentaires avec faker
+        // Groups::factory()->count(4)->create();
     }
 }

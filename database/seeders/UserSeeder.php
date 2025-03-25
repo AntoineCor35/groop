@@ -70,8 +70,8 @@ class UserSeeder extends Seeder
 
         // Créer quelques utilisateurs supplémentaires avec faker
         // Limiter le nombre pour éviter trop de données de test
-        if (User::count() < 10) {
-            User::factory()->count(5)->create();
-        }
+        // if (User::count() < 10) {
+        //     User::factory()->count(5)->create();
+        // }
     }
 }
