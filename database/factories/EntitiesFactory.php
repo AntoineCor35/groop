@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Entities;
-use App\Models\Medium;
+use App\Models\Media;
 
 class EntitiesFactory extends Factory
 {
@@ -24,7 +24,7 @@ class EntitiesFactory extends Factory
         return [
             'name' => fake()->name(),
             'description' => fake()->text(),
-            'image_id' => Medium::factory(),
+            'image_id' => null, // Mettre à null par défaut pour éviter des erreurs de relation
         ];
     }
 }

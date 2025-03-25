@@ -4,9 +4,9 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Group;
-use App\Models\Medium;
 use App\Models\Projects;
+use App\Models\Groups;
+use App\Models\Media;
 
 class ProjectsFactory extends Factory
 {
@@ -25,9 +25,9 @@ class ProjectsFactory extends Factory
         return [
             'name' => fake()->name(),
             'description' => fake()->text(),
-            'group_id' => Group::factory(),
+            'group_id' => Groups::factory(),
             'icon' => fake()->word(),
-            'image_id' => Medium::factory(),
+            'image_id' => null, // Mettre à null par défaut pour éviter des erreurs de relation
         ];
     }
 }

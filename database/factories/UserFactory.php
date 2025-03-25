@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Medium;
+use App\Models\Media;
 use App\Models\User;
 
 class UserFactory extends Factory
@@ -27,9 +27,9 @@ class UserFactory extends Factory
             'password' => fake()->password(),
             'role' => fake()->word(),
             'type' => fake()->word(),
-            'avatar_id' => Medium::factory(),
+            'avatar_id' => null,
             'email_verified_at' => fake()->dateTime(),
-            'remember_token' => fake()->uuid(),
+            'remember_token' => Str::random(10),
         ];
     }
 }

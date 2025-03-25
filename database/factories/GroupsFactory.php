@@ -5,8 +5,8 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Groups;
-use App\Models\Medium;
-use App\Models\Promotion;
+use App\Models\Promotions;
+use App\Models\Media;
 
 class GroupsFactory extends Factory
 {
@@ -25,8 +25,8 @@ class GroupsFactory extends Factory
         return [
             'name' => fake()->name(),
             'description' => fake()->text(),
-            'promotion_id' => Promotion::factory(),
-            'image_id' => Medium::factory(),
+            'promotion_id' => Promotions::factory(),
+            'image_id' => null, // Mettre à null par défaut pour éviter des erreurs de relation
         ];
     }
 }

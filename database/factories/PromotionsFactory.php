@@ -4,10 +4,9 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Entity;
-use App\Models\Medium;
-use App\Models\Promotion;
+use App\Models\Entities;
 use App\Models\Promotions;
+use App\Models\Media;
 
 class PromotionsFactory extends Factory
 {
@@ -26,9 +25,9 @@ class PromotionsFactory extends Factory
         return [
             'name' => fake()->name(),
             'description' => fake()->text(),
-            'parent_promotion_id' => Promotion::factory(),
-            'image_id' => Medium::factory(),
-            'entity_id' => Entity::factory(),
+            'parent_promotion_id' => null,
+            'image_id' => null, // Mettre à null par défaut pour éviter des erreurs de relation
+            'entity_id' => Entities::factory(),
         ];
     }
 }

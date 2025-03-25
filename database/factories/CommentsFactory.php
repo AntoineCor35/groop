@@ -5,8 +5,8 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Comments;
-use App\Models\Conversation;
 use App\Models\User;
+use App\Models\Conversations;
 
 class CommentsFactory extends Factory
 {
@@ -25,7 +25,7 @@ class CommentsFactory extends Factory
         return [
             'comment' => fake()->text(),
             'user_id' => User::factory(),
-            'conversation_id' => Conversation::factory(),
+            'conversation_id' => Conversations::factory(),
             'pinned' => fake()->boolean(),
         ];
     }

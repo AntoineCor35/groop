@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Conversations;
-use App\Models\Project;
+use App\Models\Projects;
 
 class ConversationsFactory extends Factory
 {
@@ -22,8 +22,8 @@ class ConversationsFactory extends Factory
     public function definition(): array
     {
         return [
-            'project_id' => Project::factory(),
-            'type' => fake()->randomElement(["journal","project"]),
+            'project_id' => Projects::factory(),
+            'type' => fake()->randomElement(["journal", "project"]),
         ];
     }
 }
