@@ -4,17 +4,17 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Medium;
+use App\Models\Notifications;
 use App\Models\User;
 
-class UserFactory extends Factory
+class NotificationsFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = User::class;
+    protected $model = Notifications::class;
 
     /**
      * Define the model's default state.
@@ -22,14 +22,10 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->safeEmail(),
-            'password' => fake()->password(),
-            'role' => fake()->word(),
+            'user_id' => User::factory(),
+            'message' => fake()->text(),
             'type' => fake()->word(),
-            'avatar_id' => Medium::factory(),
-            'email_verified_at' => fake()->dateTime(),
-            'remember_token' => fake()->uuid(),
+            'read_at' => fake()->dateTime(),
         ];
     }
 }

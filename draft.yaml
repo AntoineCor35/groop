@@ -1,0 +1,132 @@
+models:
+  Entities:
+    name: string
+    description: text nullable
+    image_id: id nullable foreign:media
+    relationships:
+      hasMany: Promotions
+
+  User:
+    name: string
+    email: string unique
+    password: string
+    role: string nullable
+    type: string nullable
+    avatar_id: id nullable foreign:media
+    email_verified_at: timestamp nullable
+    remember_token: string nullable
+    timestamps: true
+    soft_deletes: false
+    generate:
+      migration: false # Ne pas générer de migration car la table existe déjà
+    relationships:
+      belongsToMany: Entities, Promotions, Groups, Projects, Roles
+
+  Roles:
+    name: string
+    description: text nullable
+    relationships:
+      belongsToMany: Users
+
+  Promotions:
+    name: string
+    description: text nullable
+    parent_promotion_id: id nullable foreign:promotions
+    image_id: id nullable foreign:media
+    entity_id: id foreign:entities
+    relationships:
+      hasMany: Groups
+
+  Groups:
+    name: string
+    description: text nullable
+    promotion_id: id foreign:promotions
+    image_id: id nullable foreign:media
+    relationships:
+      hasMany: Projects
+
+  Projects:
+    name: string
+    description: text nullable
+    group_id: id foreign:groups
+    icon: string nullable
+    image_id: id nullable foreign:media
+    relationships:
+      hasMany: Applications, Conversations, ProjectLinks
+      belongsToMany: Users, Tags
+
+  Applications:
+    status: enum:pending,approved,rejected
+    project_id: id nullable foreign:projects
+    user_id: id foreign:users
+    commentaire: text nullable
+
+  Conversations:
+    project_id: id nullable foreign:projects
+    type: enum:journal,project
+    relationships:
+      hasMany: Comments
+
+  Comments:
+    comment: text
+    user_id: id foreign:users
+    conversation_id: id foreign:conversations
+    pinned: boolean default:false
+
+  Media:
+    model_type: string
+    model_id: integer
+    uuid: string nullable
+    collection_name: string
+    name: string
+    file_name: string
+    mime_type: string nullable
+    disk: string
+    conversions_disk: string nullable
+    size: integer
+    manipulations: json
+    custom_properties: json
+    generated_conversions: json
+    responsive_images: json
+    order_column: integer nullable
+
+  ProjectLinks:
+    project_id: id nullable foreign:projects
+    url: string nullable
+    type: string nullable
+
+  Tags:
+    name: string
+    relationships:
+      belongsToMany: Projects
+
+  Notifications:
+    user_id: id foreign:users
+    message: text nullable
+    type: string nullable
+    read_at: timestamp nullable
+
+pivotTables:
+  UserEntities:
+    user_id: id foreign:users
+    entity_id: id foreign:entities
+
+  UserPromotions:
+    user_id: id foreign:users
+    promotion_id: id foreign:promotions
+
+  UserGroups:
+    user_id: id foreign:users
+    group_id: id foreign:groups
+
+  UserProjects:
+    user_id: id foreign:users
+    project_id: id nullable foreign:projects
+
+  UserRoles:
+    user_id: id foreign:users
+    role_id: id foreign:roles
+
+  ProjectTags:
+    project_id: id nullable foreign:projects
+    tag_id: id foreign:tags

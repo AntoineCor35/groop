@@ -4,17 +4,17 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Models\Entities;
 use App\Models\Medium;
-use App\Models\User;
 
-class UserFactory extends Factory
+class EntitiesFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = User::class;
+    protected $model = Entities::class;
 
     /**
      * Define the model's default state.
@@ -23,13 +23,8 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'email' => fake()->safeEmail(),
-            'password' => fake()->password(),
-            'role' => fake()->word(),
-            'type' => fake()->word(),
-            'avatar_id' => Medium::factory(),
-            'email_verified_at' => fake()->dateTime(),
-            'remember_token' => fake()->uuid(),
+            'description' => fake()->text(),
+            'image_id' => Medium::factory(),
         ];
     }
 }
