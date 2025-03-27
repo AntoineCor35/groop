@@ -23,6 +23,10 @@ class GroupProjects extends Component
 
     public function loadGroup($groupId)
     {
+        // Réinitialiser le groupe pour éviter d'afficher les anciens projets
+        $this->group = null;
+        $this->groupId = null;
+
         $user = Auth::user();
 
         // Vérifier si l'utilisateur a accès à ce groupe
