@@ -5,6 +5,8 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Services\OrganizationService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
 
 class OrganizationSidebar extends Component
 {
@@ -14,11 +16,10 @@ class OrganizationSidebar extends Component
     public $expandedPromotions = [];
     public $isAdmin = false;
 
-    protected $listeners = ['groupSelected' => 'setCurrentGroup'];
-
     public function mount($currentGroupId = null)
     {
         $this->currentGroupId = $currentGroupId;
+        Log::info('OrganizationSidebar: mount avec currentGroupId = ' . ($currentGroupId ?? 'null'));
         $this->loadEntities();
 
         // Vérifier si l'utilisateur est administrateur
@@ -36,6 +37,7 @@ class OrganizationSidebar extends Component
     {
         $user = Auth::user();
         $this->entities = OrganizationService::getUserEntities($user);
+        Log::info('OrganizationSidebar: ' . count($this->entities) . ' entités chargées');
     }
 
     public function expandForGroup($groupId)
@@ -46,11 +48,13 @@ class OrganizationSidebar extends Component
                     if ($group->id == $groupId) {
                         $this->expandedEntities[] = $entity->id;
                         $this->expandedPromotions[] = $promotion->id;
+                        Log::info('OrganizationSidebar: Expansion pour le groupe ' . $groupId . ', entity=' . $entity->id . ', promotion=' . $promotion->id);
                         return;
                     }
                 }
             }
         }
+        Log::warning('OrganizationSidebar: Aucune expansion trouvée pour le groupe ' . $groupId);
     }
 
     public function toggleEntity($entityId)
@@ -73,12 +77,23 @@ class OrganizationSidebar extends Component
 
     public function selectGroup($groupId)
     {
+        Log::info('OrganizationSidebar: selectGroup appelé avec groupId = ' . $groupId);
         $this->currentGroupId = $groupId;
-        $this->dispatch('groupSelected', $groupId);
+
+        // Dispatch de l'événement Livewire
+        try {
+            // Utiliser le format to() pour cibler spécifiquement le composant GroupProjects
+            $this->dispatch('groupSelected', $groupId)->to('group-projects');
+            Log::info('OrganizationSidebar: événement groupSelected dispatché avec groupId = ' . $groupId . ' vers group-projects');
+        } catch (\Exception $e) {
+            Log::error('OrganizationSidebar: Erreur lors du dispatch de l\'événement: ' . $e->getMessage());
+        }
     }
 
+    #[On('groupSelected')]
     public function setCurrentGroup($groupId)
     {
+        Log::info('OrganizationSidebar: setCurrentGroup appelé avec groupId = ' . $groupId);
         $this->currentGroupId = $groupId;
     }
 
