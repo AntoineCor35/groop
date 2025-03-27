@@ -81,8 +81,9 @@
                                         id="promotion-{{ $promotion->id }}">
                                         @foreach ($promotion->groups as $group)
                                             <li>
-                                                <a href="{{ route('filament.admin.resources.groups.edit', $group->id) }}"
-                                                    class="flex items-center py-2 px-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                <a href="{{ route('groups.show', $group->id) }}"
+                                                    class="flex items-center py-2 px-2 rounded 
+                                                    {{ isset($currentGroupId) && $currentGroupId == $group->id ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                                                     <div class="flex items-center space-x-2">
                                                         <svg xmlns="http://www.w3.org/2000/svg"
                                                             class="h-5 w-5 text-gray-500 dark:text-gray-400"
