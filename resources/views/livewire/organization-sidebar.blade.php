@@ -1,6 +1,18 @@
 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg h-full">
     <div class="p-4 text-gray-900 dark:text-gray-100">
-        <h3 class="text-lg font-semibold mb-4">Organisation</h3>
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Organisation</h3>
+            @if ($isAdmin)
+                <a href="{{ route('filament.admin.resources.entities.create') }}"
+                    class="text-blue-500 hover:text-blue-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </a>
+            @endif
+        </div>
 
         <ul class="space-y-2">
             @foreach ($entities as $entity)
@@ -18,8 +30,21 @@
                             <span>{{ $entity->name }}</span>
                         </div>
                         <div class="flex items-center space-x-1">
+                            @if ($isAdmin)
+                                <a href="{{ route('filament.admin.resources.promotions.create', ['entity_id' => $entity->id]) }}"
+                                    class="text-green-500 hover:text-green-700" onclick="event.stopPropagation();"
+                                    title="Ajouter une promotion">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                            @endif
                             <a href="{{ route('filament.admin.resources.entities.edit', $entity->id) }}"
-                                class="text-blue-500 hover:text-blue-700">
+                                class="text-blue-500 hover:text-blue-700" onclick="event.stopPropagation();"
+                                title="Modifier l'entité">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
                                     fill="currentColor">
                                     <path
@@ -53,8 +78,21 @@
                                         <span>{{ $promotion->name }}</span>
                                     </div>
                                     <div class="flex items-center space-x-1">
+                                        @if ($isAdmin)
+                                            <a href="{{ route('filament.admin.resources.groups.create', ['promotion_id' => $promotion->id]) }}"
+                                                class="text-green-500 hover:text-green-700"
+                                                onclick="event.stopPropagation();" title="Ajouter un groupe">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+                                                    viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            </a>
+                                        @endif
                                         <a href="{{ route('filament.admin.resources.promotions.edit', $promotion->id) }}"
-                                            class="text-blue-500 hover:text-blue-700">
+                                            class="text-blue-500 hover:text-blue-700" onclick="event.stopPropagation();"
+                                            title="Modifier la promotion">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
                                                 fill="currentColor">
                                                 <path
@@ -79,10 +117,11 @@
                                         class="ml-6 space-y-1 mt-1 {{ !in_array($promotion->id, $expandedPromotions) ? 'hidden' : '' }}">
                                         @foreach ($promotion->groups as $group)
                                             <li>
-                                                <div wire:click="selectGroup({{ $group->id }})"
-                                                    class="flex items-center py-2 px-2 rounded cursor-pointer
+                                                <div
+                                                    class="flex items-center justify-between py-2 px-2 rounded cursor-pointer
                                                     {{ $currentGroupId == $group->id ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-                                                    <div class="flex items-center space-x-2">
+                                                    <div class="flex items-center space-x-2"
+                                                        wire:click="selectGroup({{ $group->id }})">
                                                         <svg xmlns="http://www.w3.org/2000/svg"
                                                             class="h-5 w-5 text-gray-500 dark:text-gray-400"
                                                             viewBox="0 0 20 20" fill="currentColor">
@@ -91,6 +130,18 @@
                                                         </svg>
                                                         <span>{{ $group->name }}</span>
                                                     </div>
+                                                    @if ($isAdmin)
+                                                        <a href="{{ route('filament.admin.resources.groups.edit', $group->id) }}"
+                                                            class="text-blue-500 hover:text-blue-700"
+                                                            onclick="event.stopPropagation();"
+                                                            title="Modifier le groupe">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+                                                                viewBox="0 0 20 20" fill="currentColor">
+                                                                <path
+                                                                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                                            </svg>
+                                                        </a>
+                                                    @endif
                                                 </div>
                                             </li>
                                         @endforeach

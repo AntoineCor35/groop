@@ -12,6 +12,7 @@ class OrganizationSidebar extends Component
     public $currentGroupId = null;
     public $expandedEntities = [];
     public $expandedPromotions = [];
+    public $isAdmin = false;
 
     protected $listeners = ['groupSelected' => 'setCurrentGroup'];
 
@@ -19,6 +20,11 @@ class OrganizationSidebar extends Component
     {
         $this->currentGroupId = $currentGroupId;
         $this->loadEntities();
+
+        // Vérifier si l'utilisateur est administrateur
+        $user = Auth::user();
+        // Vous pouvez adapter cette vérification selon votre système d'autorisation
+        $this->isAdmin = $user && ($user->is_admin || $user->admin || $user->role === 'admin');
 
         // Si un groupe est sélectionné, assurons-nous que son entité et sa promotion sont expansées
         if ($currentGroupId) {
