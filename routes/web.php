@@ -3,11 +3,22 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EntitiesController;
 use App\Http\Controllers\GroupsController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/pricing', function () {
+    return view('pages.pricing');
+})->name('pricing');
+
+Route::get('/contact', function () {
+    return view('pages.contact');
+})->name('contact');
+
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 Route::get('/dashboard', [EntitiesController::class, 'index'])
     ->middleware(['auth', 'verified'])
