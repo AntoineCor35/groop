@@ -24,13 +24,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16" # Ajustez selon votre version de Node.js
+          node-version: "18" # Mise à jour de Node.js vers une version plus récente
+          cache: "npm"
 
       - name: Install NPM dependencies
         run: npm install
 
       - name: Build assets
-        run: npm run build
+        run: |
+          export NODE_OPTIONS=--no-experimental-fetch
+          npm run build
+        env:
+          CI: false
 
       - name: Generate .env file
         run: |
