@@ -14,20 +14,20 @@
             </div>
 
             <!-- Projets du groupe -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
                 @forelse ($group->projects as $project)
                     <div
                         class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200">
-                        <div class="p-4">
-                            <h3 class="text-lg font-medium text-gray-800 mb-2">{{ $project->name }}</h3>
-                            <div class="aspect-video bg-gray-100 rounded mb-3 overflow-hidden">
+                        <div class="p-6">
+                            <h3 class="text-xl font-medium text-gray-800 mb-3">{{ $project->name }}</h3>
+                            <div class="aspect-video bg-gray-100 rounded mb-4 overflow-hidden h-48">
                                 @if ($project->cover)
                                     <img src="{{ asset($project->cover['url']) }}" alt="{{ $project->name }}"
                                         class="w-full h-full object-cover">
                                 @else
                                     <div
-                                        class="flex items-center justify-center h-32 bg-gray-100 text-gray-500 text-sm">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400"
+                                        class="flex items-center justify-center h-full bg-gray-100 text-gray-500 text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400"
                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -35,10 +35,10 @@
                                     </div>
                                 @endif
                             </div>
-                            <p class="text-gray-600 text-sm mb-3 line-clamp-3">
-                                {{ Str::limit($project->description, 100) }}
+                            <p class="text-gray-600 text-base mb-4 line-clamp-4">
+                                {{ Str::limit($project->description, 150) }}
                             </p>
-                            <div class="flex flex-wrap gap-2 mt-2">
+                            <div class="flex flex-wrap gap-2 mt-3">
                                 @foreach ($project->tags as $tag)
                                     @php
                                         // Générer des couleurs de fond différentes selon le tag
@@ -55,17 +55,17 @@
                                         $colorClass = $colors[$colorIndex];
                                     @endphp
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $colorClass }}">
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $colorClass }}">
                                         {{ $tag->name }}
                                     </span>
                                 @endforeach
                             </div>
-                            <div class="mt-4">
+                            <div class="mt-5">
                                 <a href="{{ route('filament.admin.resources.projects.view', $project->id) }}"
-                                    class="text-black hover:underline text-sm font-medium group transition duration-150 inline-flex items-center">
+                                    class="text-black hover:underline text-base font-medium group transition duration-150 inline-flex items-center">
                                     Voir le projet
                                     <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="h-4 w-4 ml-1 group-hover:translate-x-1 transition duration-150"
+                                        class="h-5 w-5 ml-1.5 group-hover:translate-x-1 transition duration-150"
                                         viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
                                             d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"

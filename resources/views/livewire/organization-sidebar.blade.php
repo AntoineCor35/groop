@@ -34,15 +34,6 @@
                             <span class="font-medium">{{ $entity->name }}</span>
                         </div>
                         <div class="flex items-center space-x-1">
-                            <a href="{{ route('filament.admin.resources.entities.edit', $entity->id) }}"
-                                class="text-gray-600 hover:text-black transition duration-150"
-                                onclick="event.stopPropagation();" title="Modifier l'entité">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path
-                                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                </svg>
-                            </a>
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 class="h-5 w-5 text-gray-600 transform transition-transform {{ in_array($entity->id, $expandedEntities) ? 'rotate-180' : '' }}"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -70,15 +61,6 @@
                                             <span class="font-medium">{{ $promotion->name }}</span>
                                         </div>
                                         <div class="flex items-center space-x-1">
-                                            <a href="{{ route('filament.admin.resources.promotions.edit', $promotion->id) }}"
-                                                class="text-gray-600 hover:text-black transition duration-150"
-                                                onclick="event.stopPropagation();" title="Modifier la promotion">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
-                                                    viewBox="0 0 20 20" fill="currentColor">
-                                                    <path
-                                                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                                </svg>
-                                            </a>
                                             @if ($promotion->groups->count() > 0)
                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                     class="h-5 w-5 text-gray-600 transform transition-transform {{ in_array($promotion->id, $expandedPromotions) ? 'rotate-180' : '' }}"
@@ -111,18 +93,6 @@
                                                             <span
                                                                 class="{{ $currentGroupId == $group->id ? 'font-medium' : '' }}">{{ $group->name }}</span>
                                                         </div>
-                                                        @if ($isAdmin)
-                                                            <a href="{{ route('filament.admin.resources.groups.edit', $group->id) }}"
-                                                                class="text-gray-600 hover:text-black transition duration-150"
-                                                                onclick="event.stopPropagation();"
-                                                                title="Modifier le groupe">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
-                                                                    viewBox="0 0 20 20" fill="currentColor">
-                                                                    <path
-                                                                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                                                </svg>
-                                                            </a>
-                                                        @endif
                                                     </div>
                                                 </li>
                                             @endforeach

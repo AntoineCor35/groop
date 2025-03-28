@@ -14,8 +14,8 @@ class EntitySeeder extends Seeder
     {
         $entities = [
             [
-                'name' => 'Université Paris-Saclay',
-                'description' => 'Université de recherche française située principalement sur le plateau de Saclay et dans les communes environnantes.',
+                'name' => 'My Digital School',
+                'description' => 'My Digital School est une école de formation en design, informatique et en management.',
                 'image_id' => 2, // Référence au media créé dans MediaSeeder
             ],
             [

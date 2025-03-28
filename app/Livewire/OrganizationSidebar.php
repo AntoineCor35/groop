@@ -19,17 +19,29 @@ class OrganizationSidebar extends Component
     public function mount($currentGroupId = null)
     {
         $this->currentGroupId = $currentGroupId;
-        Log::info('OrganizationSidebar: mount avec currentGroupId = ' . ($currentGroupId ?? 'null'));
         $this->loadEntities();
+
+        // Par défaut, toutes les entités et promotions sont déroulées
+        $this->initExpandedState();
 
         // Vérifier si l'utilisateur est administrateur
         $user = Auth::user();
-        // Vous pouvez adapter cette vérification selon votre système d'autorisation
         $this->isAdmin = $user && ($user->is_admin || $user->admin || $user->role === 'admin');
+    }
 
-        // Si un groupe est sélectionné, assurons-nous que son entité et sa promotion sont expansées
-        if ($currentGroupId) {
-            $this->expandForGroup($currentGroupId);
+    protected function initExpandedState()
+    {
+        // Vider les tableaux
+        $this->expandedEntities = [];
+        $this->expandedPromotions = [];
+
+        // Ajouter toutes les entités et promotions
+        foreach ($this->entities as $entity) {
+            $this->expandedEntities[] = $entity->id;
+
+            foreach ($entity->promotions as $promotion) {
+                $this->expandedPromotions[] = $promotion->id;
+            }
         }
     }
 
@@ -37,7 +49,36 @@ class OrganizationSidebar extends Component
     {
         $user = Auth::user();
         $this->entities = OrganizationService::getUserEntities($user);
-        Log::info('OrganizationSidebar: ' . count($this->entities) . ' entités chargées');
+    }
+
+    public function toggleEntity($entityId)
+    {
+        if (in_array($entityId, $this->expandedEntities)) {
+            // Retirer l'entité de la liste
+            $index = array_search($entityId, $this->expandedEntities);
+            if ($index !== false) {
+                unset($this->expandedEntities[$index]);
+                $this->expandedEntities = array_values($this->expandedEntities);
+            }
+        } else {
+            // Ajouter l'entité à la liste
+            $this->expandedEntities[] = $entityId;
+        }
+    }
+
+    public function togglePromotion($promotionId)
+    {
+        if (in_array($promotionId, $this->expandedPromotions)) {
+            // Retirer la promotion de la liste
+            $index = array_search($promotionId, $this->expandedPromotions);
+            if ($index !== false) {
+                unset($this->expandedPromotions[$index]);
+                $this->expandedPromotions = array_values($this->expandedPromotions);
+            }
+        } else {
+            // Ajouter la promotion à la liste
+            $this->expandedPromotions[] = $promotionId;
+        }
     }
 
     public function expandForGroup($groupId)
@@ -46,55 +87,42 @@ class OrganizationSidebar extends Component
             foreach ($entity->promotions as $promotion) {
                 foreach ($promotion->groups as $group) {
                     if ($group->id == $groupId) {
-                        $this->expandedEntities[] = $entity->id;
-                        $this->expandedPromotions[] = $promotion->id;
-                        Log::info('OrganizationSidebar: Expansion pour le groupe ' . $groupId . ', entity=' . $entity->id . ', promotion=' . $promotion->id);
+                        // S'assurer que l'entité et la promotion sont expansées
+                        if (!in_array($entity->id, $this->expandedEntities)) {
+                            $this->expandedEntities[] = $entity->id;
+                        }
+
+                        if (!in_array($promotion->id, $this->expandedPromotions)) {
+                            $this->expandedPromotions[] = $promotion->id;
+                        }
+
                         return;
                     }
                 }
             }
         }
-        Log::warning('OrganizationSidebar: Aucune expansion trouvée pour le groupe ' . $groupId);
-    }
-
-    public function toggleEntity($entityId)
-    {
-        if (in_array($entityId, $this->expandedEntities)) {
-            $this->expandedEntities = array_diff($this->expandedEntities, [$entityId]);
-        } else {
-            $this->expandedEntities[] = $entityId;
-        }
-    }
-
-    public function togglePromotion($promotionId)
-    {
-        if (in_array($promotionId, $this->expandedPromotions)) {
-            $this->expandedPromotions = array_diff($this->expandedPromotions, [$promotionId]);
-        } else {
-            $this->expandedPromotions[] = $promotionId;
-        }
     }
 
     public function selectGroup($groupId)
     {
-        Log::info('OrganizationSidebar: selectGroup appelé avec groupId = ' . $groupId);
         $this->currentGroupId = $groupId;
+
+        // S'assurer que le groupe est visible
+        $this->expandForGroup($groupId);
 
         // Dispatch de l'événement Livewire
         try {
-            // Utiliser le format to() pour cibler spécifiquement le composant GroupProjects
             $this->dispatch('groupSelected', $groupId)->to('group-projects');
-            Log::info('OrganizationSidebar: événement groupSelected dispatché avec groupId = ' . $groupId . ' vers group-projects');
         } catch (\Exception $e) {
-            Log::error('OrganizationSidebar: Erreur lors du dispatch de l\'événement: ' . $e->getMessage());
+            Log::error('OrganizationSidebar: Erreur lors du dispatch: ' . $e->getMessage());
         }
     }
 
     #[On('groupSelected')]
     public function setCurrentGroup($groupId)
     {
-        Log::info('OrganizationSidebar: setCurrentGroup appelé avec groupId = ' . $groupId);
         $this->currentGroupId = $groupId;
+        $this->expandForGroup($groupId);
     }
 
     public function render()
