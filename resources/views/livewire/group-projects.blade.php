@@ -6,9 +6,9 @@
         x-transition:enter-end="opacity-100">
         @if ($group)
             <!-- Description du groupe -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-lg font-semibold mb-2">{{ $group->name }} - DESCRIPTION</h3>
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-6">
+                <div class="p-6 text-gray-900">
+                    <h3 class="text-lg font-semibold mb-2 border-b pb-2">{{ $group->name }} - DESCRIPTION</h3>
                     <p>{{ $group->description ?? 'Aucune description disponible.' }}</p>
                 </div>
             </div>
@@ -16,10 +16,10 @@
             <!-- Projets du groupe -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @forelse ($group->projects as $project)
-                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="bg-white overflow-hidden shadow-sm rounded-lg hover:shadow-md transition duration-150">
                         <div class="p-4">
                             <h4 class="font-semibold text-lg mb-2">{{ $project->name }}</h4>
-                            <div class="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 overflow-hidden">
+                            <div class="aspect-video bg-gray-100 rounded-lg mb-3 overflow-hidden">
                                 @if ($project->cover)
                                     <img src="{{ asset($project->cover['url']) }}" alt="{{ $project->name }}"
                                         class="w-full h-full object-cover">
@@ -33,31 +33,38 @@
                                     </div>
                                 @endif
                             </div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-3">
+                            <p class="text-sm text-gray-600 mb-3 line-clamp-3">
                                 {{ Str::limit($project->description, 100) }}
                             </p>
                             <div class="flex flex-wrap gap-2 mt-2">
                                 @foreach ($project->tags as $tag)
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-gray-800">
                                         {{ $tag->name }}
                                     </span>
                                 @endforeach
                             </div>
                             <div class="mt-4">
                                 <a href="{{ route('filament.admin.resources.projects.view', $project->id) }}"
-                                    class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium">
-                                    Voir le projet →
+                                    class="text-black hover:underline text-sm font-medium group transition duration-150 inline-flex items-center">
+                                    Voir le projet
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-4 w-4 ml-1 group-hover:translate-x-1 transition duration-150"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
                                 </a>
                             </div>
                         </div>
                     </div>
                 @empty
-                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg col-span-full">
+                    <div class="bg-white overflow-hidden shadow-sm rounded-lg col-span-full">
                         <div class="p-6 text-center">
-                            <p class="text-gray-500 dark:text-gray-400">Aucun projet disponible pour ce groupe.</p>
+                            <p class="text-gray-500">Aucun projet disponible pour ce groupe.</p>
                             <a href="{{ route('filament.admin.resources.projects.create') }}"
-                                class="mt-4 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                                class="mt-4 inline-flex items-center px-4 py-2 bg-black border border-transparent rounded-md font-medium text-sm text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                 Créer un projet
                             </a>
                         </div>
@@ -65,8 +72,8 @@
                 @endforelse
             </div>
         @else
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-center text-gray-500 dark:text-gray-400">
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+                <div class="p-6 text-center text-gray-500">
                     <p class="mb-4">Sélectionnez un groupe dans le panneau de navigation pour voir ses projets.</p>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
@@ -79,7 +86,7 @@
     </div>
 
     <div x-show="loading" class="flex justify-center items-center py-12">
-        <svg class="animate-spin -ml-1 mr-3 h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+        <svg class="animate-spin -ml-1 mr-3 h-10 w-10 text-black" xmlns="http://www.w3.org/2000/svg" fill="none"
             viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
             </circle>
