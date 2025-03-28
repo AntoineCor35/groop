@@ -20,6 +20,10 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 0
+          COMPOSER_NO_INTERACTION: 1
+          COMPOSER_NO_AUDIT: 1
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -57,8 +61,8 @@ jobs:
           server: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp # ou 'ftps' ou 'sftp' selon ce que Hostinger supporte
-          port: 21 # Port FTP standard (21), ou 22 pour SFTP
+          protocol: ftp # Utiliser le protocole FTP standard
+          port: 21 # Port FTP standard
           local-dir: ./
           server-dir: ${{ secrets.REMOTE_PATH }}/
           exclude: |
@@ -73,6 +77,10 @@ jobs:
             **/.env.example
             .gitignore
             README.md
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 0
+          COMPOSER_NO_INTERACTION: 1
+          COMPOSER_NO_AUDIT: 1
 
       # Si vous avez encore besoin d'exécuter des commandes post-déploiement (optionnel)
       # Vous pouvez créer un script PHP pour exécuter ces commandes via le navigateur
