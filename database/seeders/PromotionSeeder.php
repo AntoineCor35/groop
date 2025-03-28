@@ -21,7 +21,7 @@ class PromotionSeeder extends Seeder
                 'entity_id' => 1, // Université Paris-Saclay
             ],
             [
-                'name' => 'Master Informatique 2023',
+                'name' => 'Bachelor 3',
                 'description' => 'Promotion Master Informatique année 2023',
                 'parent_promotion_id' => null,
                 'image_id' => null,

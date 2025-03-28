@@ -55,8 +55,8 @@ class ProjectLinkSeeder extends Seeder
             ],
         ];
 
-        // foreach ($projectLinks as $link) {
-        //     ProjectLinks::create($link);
-        // }
+        foreach ($projectLinks as $link) {
+            ProjectLinks::create($link);
+        }
     }
 }

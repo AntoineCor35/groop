@@ -1,22 +1,27 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
+        <div class="flex items-center space-x-4">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ $group->name }}
+            </h2>
+            <span class="text-sm text-gray-600">
+                {{ $group->promotion->entity->name }} / {{ $group->promotion->name }}
+            </span>
+        </div>
     </x-slot>
 
     <div class="flex flex-col md:flex-row gap-6">
         <!-- Panneau latéral de l'organisation - Composant Livewire -->
         <div class="w-full md:w-1/4">
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
-                <livewire:organization-sidebar wire:key="sidebar" />
+                <livewire:organization-sidebar wire:key="sidebar" :current-group-id="$currentGroupId" />
             </div>
         </div>
 
         <!-- Contenu principal - Composant Livewire -->
         <div class="w-full md:w-3/4">
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
-                <livewire:group-projects wire:key="projects" />
+                <livewire:group-projects wire:key="projects" :group-id="$currentGroupId" />
             </div>
         </div>
     </div>

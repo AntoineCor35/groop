@@ -26,21 +26,21 @@ class GroupSeeder extends Seeder
                 'image_id' => null,
             ],
             [
-                'name' => 'Groupe A - Master Info 2023',
-                'description' => 'Groupe A de la promotion Master Informatique 2023',
+                'name' => 'Challenge Top Code',
+                'description' => 'À travers une trame narrative immersive, les participants relèvent des challenges techniques stimulants, seul ou en équipe. Un univers scénarisé, des missions à haut potentiel, et un seul objectif : coder pour devenir le meilleur.',
                 'promotion_id' => 2, // Master Informatique 2023
                 'image_id' => null,
             ],
             [
-                'name' => 'Groupe B - Master Info 2023',
+                'name' => 'English Game',
                 'description' => 'Groupe B de la promotion Master Informatique 2023',
                 'promotion_id' => 2, // Master Informatique 2023
                 'image_id' => null,
             ],
             [
-                'name' => 'Groupe A - Master IA 2023',
-                'description' => 'Groupe A de la promotion Master IA 2023',
-                'promotion_id' => 3, // Master IA 2023
+                'name' => 'My Digital Project',
+                'description' => 'Conception et réalisation d’un projet digital en groupe, sur la base d’une initiative étudiante (fictive) ou d’une commande externe (réelle).',
+                'promotion_id' => 2,
                 'image_id' => null,
             ],
             [
