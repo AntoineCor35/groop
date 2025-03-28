@@ -139,75 +139,22 @@
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-8">
                         <div class="p-6">
                             <h2 class="text-xl font-semibold text-gray-900 mb-4">Discussions</h2>
-                            @if ($publicConversation && $publicConversation->comments->isNotEmpty())
-                                <div class="space-y-6">
-                                    @foreach ($publicConversation->comments as $comment)
-                                        <div class="flex space-x-4">
-                                            <div class="flex-shrink-0">
-                                                @if ($comment->user && $comment->user->avatar)
-                                                    <img class="h-10 w-10 rounded-full"
-                                                        src="{{ asset('storage/' . $comment->user->avatar->path) }}"
-                                                        alt="{{ $comment->user->name }}">
-                                                @else
-                                                    <div
-                                                        class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-700">
-                                                        {{ substr($comment->user->name ?? 'U', 0, 1) }}
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <div class="flex-grow">
-                                                <div class="flex items-center justify-between">
-                                                    <h3 class="text-sm font-medium text-gray-900">
-                                                        {{ $comment->user->name ?? 'Utilisateur' }}</h3>
-                                                    <p class="text-xs text-gray-500">
-                                                        {{ \Carbon\Carbon::parse($comment->created_at)->format('d/m/Y à H:i') }}
-                                                    </p>
-                                                </div>
-                                                <div class="mt-1 text-sm text-gray-700">
-                                                    <p>{{ $comment->comment }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
+                            @if ($publicConversation)
+                                <livewire:comments-list :conversationId="$publicConversation->id" />
 
-                                <!-- Formulaire pour ajouter un commentaire -->
-                                <div class="mt-6 pt-4 border-t border-gray-200">
-                                    <form action="{{ route('comments.store') }}" method="POST" class="flex">
-                                        @csrf
-                                        <input type="hidden" name="conversation_id"
-                                            value="{{ $publicConversation->id }}">
-                                        <input type="text" name="comment" placeholder="Ajouter un commentaire..."
-                                            class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                        <button type="submit"
-                                            class="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Envoyer
-                                        </button>
-                                    </form>
-                                </div>
+                                <!-- Formulaire Livewire pour ajouter un commentaire -->
+                                <livewire:create-comment :conversationId="$publicConversation->id" />
                             @else
                                 <div class="text-center py-6">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-4"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                     </svg>
                                     <p class="text-gray-500">Aucune discussion pour le moment.</p>
 
-                                    <!-- Formulaire pour créer une première discussion -->
-                                    <form action="{{ route('conversations.create') }}" method="POST"
-                                        class="mt-4 flex flex-col items-center">
-                                        @csrf
-                                        <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                        <input type="hidden" name="type" value="public">
-                                        <input type="text" name="comment" placeholder="Démarrer une discussion..."
-                                            class="w-full max-w-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mb-2">
-                                        <button type="submit"
-                                            class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Démarrer une discussion
-                                        </button>
-                                    </form>
+                                    <!-- Formulaire Livewire pour créer une nouvelle conversation -->
+                                    <livewire:create-comment :projectId="$project->id" type="public" />
                                 </div>
                             @endif
                         </div>
@@ -227,56 +174,11 @@
                                     Discussion privée (Administrateurs uniquement)
                                 </h2>
 
-                                @if ($adminConversation && $adminConversation->comments->isNotEmpty())
-                                    <div class="space-y-6 bg-red-50 p-4 rounded-md">
-                                        @foreach ($adminConversation->comments as $comment)
-                                            <div class="flex space-x-4">
-                                                <div class="flex-shrink-0">
-                                                    @if ($comment->user && $comment->user->avatar)
-                                                        <img class="h-10 w-10 rounded-full"
-                                                            src="{{ asset('storage/' . $comment->user->avatar->path) }}"
-                                                            alt="{{ $comment->user->name }}">
-                                                    @else
-                                                        <div
-                                                            class="h-10 w-10 rounded-full bg-red-200 flex items-center justify-center text-red-700">
-                                                            {{ substr($comment->user->name ?? 'A', 0, 1) }}
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <div class="flex items-center justify-between">
-                                                        <h3 class="text-sm font-medium text-gray-900">
-                                                            {{ $comment->user->name ?? 'Administrateur' }}
-                                                            <span
-                                                                class="ml-2 text-xs text-red-600 font-normal">Admin</span>
-                                                        </h3>
-                                                        <p class="text-xs text-gray-500">
-                                                            {{ \Carbon\Carbon::parse($comment->created_at)->format('d/m/Y à H:i') }}
-                                                        </p>
-                                                    </div>
-                                                    <div class="mt-1 text-sm text-gray-700">
-                                                        <p>{{ $comment->comment }}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
+                                @if ($adminConversation)
+                                    <livewire:comments-list :conversationId="$adminConversation->id" />
 
-                                    <!-- Formulaire pour ajouter un commentaire admin -->
-                                    <div class="mt-6 pt-4 border-t border-gray-200">
-                                        <form action="{{ route('comments.store') }}" method="POST" class="flex">
-                                            @csrf
-                                            <input type="hidden" name="conversation_id"
-                                                value="{{ $adminConversation->id }}">
-                                            <input type="text" name="comment"
-                                                placeholder="Ajouter un commentaire administrateur..."
-                                                class="flex-1 border-red-300 focus:border-red-500 focus:ring-red-500 rounded-md shadow-sm bg-red-50">
-                                            <button type="submit"
-                                                class="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                                Envoyer
-                                            </button>
-                                        </form>
-                                    </div>
+                                    <!-- Formulaire Livewire pour ajouter un commentaire admin -->
+                                    <livewire:create-comment :conversationId="$adminConversation->id" type="admin" />
                                 @else
                                     <div class="text-center py-6 bg-red-50 rounded-md">
                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -287,20 +189,8 @@
                                         </svg>
                                         <p class="text-gray-700">Aucune discussion administrative pour le moment.</p>
 
-                                        <!-- Formulaire pour créer une première discussion admin -->
-                                        <form action="{{ route('conversations.create') }}" method="POST"
-                                            class="mt-4 flex flex-col items-center">
-                                            @csrf
-                                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                            <input type="hidden" name="type" value="admin">
-                                            <input type="text" name="comment"
-                                                placeholder="Démarrer une discussion admin..."
-                                                class="w-full max-w-md border-red-300 focus:border-red-500 focus:ring-red-500 rounded-md shadow-sm mb-2 bg-red-50">
-                                            <button type="submit"
-                                                class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                                Démarrer une discussion admin
-                                            </button>
-                                        </form>
+                                        <!-- Formulaire Livewire pour créer une nouvelle conversation admin -->
+                                        <livewire:create-comment :projectId="$project->id" type="admin" />
                                     </div>
                                 @endif
                             </div>
