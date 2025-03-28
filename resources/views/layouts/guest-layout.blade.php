@@ -85,9 +85,17 @@
 
                         <!-- Navigation Links -->
                         <div class="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
-                            <a href="{{ url('/') }}"
-                                class="nav-link inline-flex items-center px-1 pt-1 border-b-2 {{ request()->is('/') ? 'border-black text-black font-medium active' : 'border-transparent text-gray-500 hover:text-gray-700' }} h-16">
-                                ACCUEIL
+                            <a href="{{ url('/#features') }}"
+                                class="nav-link inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 h-16">
+                                FONCTIONNALITÉS
+                            </a>
+                            <a href="{{ url('/#how-it-works') }}"
+                                class="nav-link inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 h-16">
+                                COMMENT ÇA MARCHE
+                            </a>
+                            <a href="{{ url('/#testimonials') }}"
+                                class="nav-link inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 h-16">
+                                TÉMOIGNAGES
                             </a>
                             <a href="{{ route('pricing') }}"
                                 class="nav-link inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('pricing') ? 'border-black text-black font-medium active' : 'border-transparent text-gray-500 hover:text-gray-700' }} h-16">
@@ -141,9 +149,17 @@
             <!-- Responsive Navigation Menu -->
             <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
                 <div class="pt-2 pb-3 space-y-1">
-                    <a href="{{ url('/') }}"
-                        class="{{ request()->is('/') ? 'border-l-4 border-black text-black bg-gray-50' : 'border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
-                        ACCUEIL
+                    <a href="{{ url('/#features') }}"
+                        class="border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
+                        FONCTIONNALITÉS
+                    </a>
+                    <a href="{{ url('/#how-it-works') }}"
+                        class="border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
+                        COMMENT ÇA MARCHE
+                    </a>
+                    <a href="{{ url('/#testimonials') }}"
+                        class="border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
+                        TÉMOIGNAGES
                     </a>
                     <a href="{{ route('pricing') }}"
                         class="{{ request()->routeIs('pricing') ? 'border-l-4 border-black text-black bg-gray-50' : 'border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
