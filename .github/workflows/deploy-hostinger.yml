@@ -51,36 +51,29 @@ jobs:
           php artisan route:cache
           php artisan config:cache
 
-      - name: Deploy to Hostinger
-        uses: easingthemes/ssh-deploy@main
+      - name: Deploy to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-rltgoDzvO --delete"
-          SOURCE: "."
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: ${{ secrets.REMOTE_PATH }}
-          EXCLUDE: ".git, .github, .gitignore, .env.example, node_modules, tests, storage/framework/cache/*, storage/logs/*, vendor/bin"
-
-      - name: Post-deployment setup
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.REMOTE_HOST }}
+          server: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd ${{ secrets.REMOTE_PATH }}
-            # Vérification de la version PHP sur le serveur
-            php -v
-            php artisan migrate --force || echo "Migration failed - please check PHP version on server"
-            php artisan cache:clear
-            php artisan config:clear
-            php artisan route:clear
-            php artisan view:clear
-            php artisan storage:link
-            # Définir les permissions correctes
-            find . -type f -exec chmod 644 {} \;
-            find . -type d -exec chmod 755 {} \;
-            chmod -R 775 storage bootstrap/cache
-            # Si vous avez besoin de redémarrer des services supplémentaires
-            # Commande pour redémarrer services si nécessaire
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp # ou 'ftps' ou 'sftp' selon ce que Hostinger supporte
+          port: 21 # Port FTP standard (21), ou 22 pour SFTP
+          local-dir: ./
+          server-dir: ${{ secrets.REMOTE_PATH }}/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/tests/**
+            **/storage/framework/cache/**
+            **/storage/logs/**
+            **/vendor/bin/**
+            **/.github/**
+            **/.env.example
+            .gitignore
+            README.md
+
+      # Si vous avez encore besoin d'exécuter des commandes post-déploiement (optionnel)
+      # Vous pouvez créer un script PHP pour exécuter ces commandes via le navigateur
+      # ou utiliser le panneau de contrôle Hostinger
