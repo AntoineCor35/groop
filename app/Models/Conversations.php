@@ -29,6 +29,7 @@ class Conversations extends Model
     protected $casts = [
         'id' => 'integer',
         'project_id' => 'integer',
+        'type' => 'string',
     ];
 
     public function comments(): HasMany

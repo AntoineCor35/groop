@@ -87,7 +87,7 @@ class CommentsController extends Controller
             // Sinon, créer la conversation et le commentaire
             $conversation = new Conversations();
             $conversation->project_id = $request->project_id;
-            $conversation->type = $request->type;
+            $conversation->type = (string) $request->type;
             $conversation->save();
 
             $comment = new Comments();
