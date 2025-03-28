@@ -96,7 +96,8 @@
 
                             <div>
                                 <h3 class="text-sm font-medium text-gray-500">Participants</h3>
-                                <p class="mt-1 text-sm text-gray-900">{{ $project->users->count() }} membres</p>
+                                <p class="mt-1 text-sm text-gray-900">{{ $project->regularMembers->count() }} membres
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -160,8 +161,8 @@
                         </div>
                     </div>
 
-                    <!-- Conversation administrateurs (visible uniquement pour les admins) -->
-                    @if ($isAdmin)
+                    <!-- Conversation administrateurs (visible pour les admins et modérateurs) -->
+                    @if ($isAdmin || $isModerator)
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6">
                                 <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
@@ -171,7 +172,7 @@
                                             d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                                             clip-rule="evenodd" />
                                     </svg>
-                                    Discussion privée (Administrateurs uniquement)
+                                    Discussion privée (Administration)
                                 </h2>
 
                                 @if ($adminConversation)
@@ -205,7 +206,7 @@
                         <div class="p-6">
                             <h2 class="text-xl font-semibold text-gray-900 mb-4">Membres du projet</h2>
                             <div class="space-y-3">
-                                @foreach ($project->users as $user)
+                                @foreach ($project->regularMembers as $user)
                                     <div class="flex items-center space-x-3">
                                         @if ($user->avatar)
                                             <img class="h-8 w-8 rounded-full"

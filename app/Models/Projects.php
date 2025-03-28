@@ -121,6 +121,21 @@ class Projects extends Model implements HasMedia
         return $this->belongsToMany(User::class, 'projects_user', 'project_id', 'user_id');
     }
 
+    /**
+     * Récupère uniquement les membres réguliers du projet (non admin, non modérateur)
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function regularMembers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'projects_user', 'project_id', 'user_id')
+            ->where(function ($query) {
+                $query->where('role', '!=', 'Admin')
+                    ->where('role', '!=', 'Modérateur')
+                    ->orWhereNull('role');
+            });
+    }
+
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tags::class, 'projects_tags', 'project_id', 'tag_id');

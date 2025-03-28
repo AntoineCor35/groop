@@ -23,12 +23,12 @@ class ProjectsController extends Controller
 
         // Récupérer tous les projets de l'utilisateur avec les relations nécessaires
         $projects = $user->projects()
-            ->with(['group', 'group.promotion', 'group.promotion.entity', 'media', 'tags', 'users'])
+            ->with(['group', 'group.promotion', 'group.promotion.entity', 'media', 'tags', 'users', 'regularMembers'])
             ->get();
 
         // Récupérer les projets dont l'utilisateur est propriétaire
         $ownedProjects = Projects::where('owner_id', $user->id)
-            ->with(['group', 'group.promotion', 'group.promotion.entity', 'media', 'tags', 'users'])
+            ->with(['group', 'group.promotion', 'group.promotion.entity', 'media', 'tags', 'users', 'regularMembers'])
             ->get();
 
         // Fusionner les collections en évitant les doublons
@@ -53,6 +53,7 @@ class ProjectsController extends Controller
             'media',
             'tags',
             'users',
+            'regularMembers',
             'owner',
             'applications' => function ($query) {
                 $query->with('user');

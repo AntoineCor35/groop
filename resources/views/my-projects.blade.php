@@ -67,7 +67,7 @@
                                     @endif
 
                                     <div class="mt-4 flex items-center text-xs text-gray-500">
-                                        <span>{{ $project->users->count() }} participants</span>
+                                        <span>{{ $project->regularMembers->count() }} participants</span>
                                         @if ($project->due_date)
                                             <span class="ml-auto">Échéance:
                                                 {{ \Carbon\Carbon::parse($project->due_date)->format('d/m/Y') }}</span>
