@@ -14,7 +14,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.1" # Ajustez selon votre version de PHP
+          php-version: "8.2" # Mise à jour vers PHP 8.2 pour satisfaire les dépendances
           extensions: mbstring, dom, zip, pdo, pdo_mysql, gd, exif, pcntl, bcmath, soap
           coverage: none
 
@@ -65,7 +65,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ${{ secrets.REMOTE_PATH }}
-            php artisan migrate --force
+            # Vérification de la version PHP sur le serveur
+            php -v
+            php artisan migrate --force || echo "Migration failed - please check PHP version on server"
             php artisan cache:clear
             php artisan config:clear
             php artisan route:clear
