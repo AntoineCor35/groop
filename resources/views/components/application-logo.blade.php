@@ -1,7 +1,1 @@
-<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" {{ $attributes }} fill="currentColor">
-    <path
-        d="M25 2C12.3 2 2 12.3 2 25s10.3 23 23 23 23-10.3 23-23S37.7 2 25 2zm0 4c10.5 0 19 8.5 19 19s-8.5 19-19 19S6 35.5 6 25 14.5 6 25 6z" />
-    <path
-        d="M25 10c-8.3 0-15 6.7-15 15s6.7 15 15 15 15-6.7 15-15-6.7-15-15-15zm0 4c6.1 0 11 4.9 11 11s-4.9 11-11 11-11-4.9-11-11 4.9-11 11-11z" />
-    <circle cx="25" cy="25" r="5" />
-</svg>
+<img src="{{ asset('images/logo.png') }}" {{ $attributes }} alt="Project Logo">

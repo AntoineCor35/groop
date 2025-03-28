@@ -1,4 +1,4 @@
-<div class="bg-white overflow-hidden shadow-sm rounded-lg h-full">
+<div class="border border-gray-200 rounded-lg overflow-hidden h-full bg-white">
     <div class="p-5 text-gray-900">
         <div class="mb-5">
             <h3 class="text-lg font-semibold mb-2 border-b pb-2">Organisation</h3>
