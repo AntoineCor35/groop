@@ -31,6 +31,7 @@ class Projects extends Model implements HasMedia
         'icon',
         'custom_icon',
         'image_id',
+        'owner_id',
     ];
 
     /**
@@ -52,6 +53,7 @@ class Projects extends Model implements HasMedia
         'id' => 'integer',
         'group_id' => 'integer',
         'image_id' => 'integer',
+        'owner_id' => 'integer',
     ];
 
     /**
@@ -101,7 +103,7 @@ class Projects extends Model implements HasMedia
 
     public function applications(): HasMany
     {
-        return $this->hasMany(Applications::class);
+        return $this->hasMany(Applications::class, 'project_id');
     }
 
     public function conversations(): HasMany
@@ -132,6 +134,14 @@ class Projects extends Model implements HasMedia
     public function image(): BelongsTo
     {
         return $this->belongsTo(\Spatie\MediaLibrary\MediaCollections\Models\Media::class, 'image_id');
+    }
+
+    /**
+     * Get the owner of the project.
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     /**

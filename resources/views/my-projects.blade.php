@@ -6,13 +6,13 @@
                 <p class="mt-2 text-gray-600">Voici tous les projets auxquels vous participez</p>
             </div>
 
-            @if ($projects->isEmpty())
+            @if ($allProjects->isEmpty())
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8 text-center">
                     <p class="text-gray-500 text-lg">Vous ne participez à aucun projet pour le moment.</p>
                 </div>
             @else
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach ($projects as $project)
+                    @foreach ($allProjects as $project)
                         <a href="{{ route('projects.show', $project->id) }}" class="block">
                             <div
                                 class="bg-white overflow-hidden shadow-sm sm:rounded-lg h-full transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
