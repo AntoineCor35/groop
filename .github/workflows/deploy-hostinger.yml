@@ -1,0 +1,87 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [main] # Remplacez par 'master' si c'est votre branche principale
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2" # Mise à jour vers PHP 8.2 pour satisfaire les dépendances
+          extensions: mbstring, dom, zip, pdo, pdo_mysql, gd, exif, pcntl, bcmath, soap
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 0
+          COMPOSER_NO_INTERACTION: 1
+          COMPOSER_NO_AUDIT: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18" # Mise à jour de Node.js vers une version plus récente
+          cache: "npm"
+
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: Build assets
+        run: |
+          export NODE_OPTIONS=--no-experimental-fetch
+          npm run build
+        env:
+          CI: false
+
+      - name: Generate .env file
+        run: |
+          echo "${{ secrets.ENV_PRODUCTION }}" > .env
+
+      - name: Generate application key
+        run: php artisan key:generate --force
+
+      - name: Optimize
+        run: |
+          php artisan optimize
+          php artisan view:cache
+          php artisan route:cache
+          php artisan config:cache
+
+      - name: Deploy to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp # Utiliser le protocole FTP standard
+          port: 21 # Port FTP standard
+          local-dir: ./
+          server-dir: ${{ secrets.REMOTE_PATH }}/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/tests/**
+            **/storage/framework/cache/**
+            **/storage/logs/**
+            **/vendor/bin/**
+            **/.github/**
+            **/.env.example
+            .gitignore
+            README.md
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 0
+          COMPOSER_NO_INTERACTION: 1
+          COMPOSER_NO_AUDIT: 1
+
+      # Si vous avez encore besoin d'exécuter des commandes post-déploiement (optionnel)
+      # Vous pouvez créer un script PHP pour exécuter ces commandes via le navigateur
+      # ou utiliser le panneau de contrôle Hostinger

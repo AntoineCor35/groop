@@ -14,7 +14,7 @@ Groop est une plateforme web innovante qui simplifie la mise en relation entre �
 
 ## 🔧 Technologies utilisées
 
--   **Backend** : Laravel 10.x (PHP 8.1+)
+-   **Backend** : Laravel 12.x (PHP 8.2+)
 -   **Frontend** : Tailwind CSS, Alpine.js
 -   **Base de données** : MySQL
 -   **Authentification** : Laravel Breeze
@@ -22,7 +22,7 @@ Groop est une plateforme web innovante qui simplifie la mise en relation entre �
 
 ## 📋 Prérequis
 
--   PHP 8.1 ou supérieur
+-   PHP 8.2 ou supérieur (obligatoire pour Laravel 12)
 -   Composer
 -   Node.js et NPM
 -   MySQL
@@ -110,8 +110,11 @@ Le projet est configuré pour un déploiement automatique vers Hostinger via Git
 Pour configurer le déploiement automatique :
 
 1. Configurez les secrets GitHub dans votre dépôt (voir `.github/workflows/README.md`)
-2. Poussez vos modifications sur la branche principale
-3. GitHub Actions déploiera automatiquement vers Hostinger
+2. **Important** : Assurez-vous que votre serveur d'hébergement utilise PHP 8.2 ou supérieur
+3. Poussez vos modifications sur la branche principale
+4. GitHub Actions déploiera automatiquement vers Hostinger
+
+Si vous rencontrez des problèmes de compatibilité PHP, consultez [le guide de résolution](.github/workflows/PHP_VERSION_ISSUE.md).
 
 Pour plus de détails sur la configuration du déploiement, consultez [le guide de déploiement](.github/workflows/README.md).
 
