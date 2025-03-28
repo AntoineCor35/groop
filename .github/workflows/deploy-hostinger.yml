@@ -1,0 +1,79 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [main] # Remplacez par 'master' si c'est votre branche principale
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1" # Ajustez selon votre version de PHP
+          extensions: mbstring, dom, zip, pdo, pdo_mysql, gd, exif, pcntl, bcmath, soap
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16" # Ajustez selon votre version de Node.js
+
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Generate .env file
+        run: |
+          echo "${{ secrets.ENV_PRODUCTION }}" > .env
+
+      - name: Generate application key
+        run: php artisan key:generate --force
+
+      - name: Optimize
+        run: |
+          php artisan optimize
+          php artisan view:cache
+          php artisan route:cache
+          php artisan config:cache
+
+      - name: Deploy to Hostinger
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rltgoDzvO --delete"
+          SOURCE: "."
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.REMOTE_PATH }}
+          EXCLUDE: ".git, .github, .gitignore, .env.example, node_modules, tests, storage/framework/cache/*, storage/logs/*, vendor/bin"
+
+      - name: Post-deployment setup
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}
+            php artisan migrate --force
+            php artisan cache:clear
+            php artisan config:clear
+            php artisan route:clear
+            php artisan view:clear
+            php artisan storage:link
+            # Définir les permissions correctes
+            find . -type f -exec chmod 644 {} \;
+            find . -type d -exec chmod 755 {} \;
+            chmod -R 775 storage bootstrap/cache
+            # Si vous avez besoin de redémarrer des services supplémentaires
+            # Commande pour redémarrer services si nécessaire
