@@ -24,6 +24,64 @@
     </script>
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        :root {
+            --color-primary: #000000;
+            --color-secondary: #4F46E5;
+            --color-accent: #818CF8;
+        }
+
+        .bg-secondary {
+            background-color: var(--color-secondary);
+        }
+
+        .hover\:bg-secondary\/90:hover {
+            background-color: rgba(79, 70, 229, 0.9);
+        }
+
+        .text-secondary {
+            color: var(--color-secondary);
+        }
+
+        .border-secondary {
+            border-color: var(--color-secondary);
+        }
+
+        .hover\:border-secondary:hover {
+            border-color: var(--color-secondary);
+        }
+
+        .active-nav-link {
+            border-bottom: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--color-primary);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased text-gray-900 bg-white">
@@ -32,24 +90,36 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex">
+                    <!-- Logo -->
                     <div class="flex-shrink-0 flex items-center">
                         <img class="h-10 w-auto" src="{{ asset('images/logo.png') }}" alt="Groop Logo">
                     </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+
+                    <!-- Navigation Links -->
+                    <div class="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
                         <a href="#features"
-                            class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 transition duration-150 ease-in-out">
-                            Fonctionnalités
+                            class="nav-link inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 h-16">
+                            FONCTIONNALITÉS
                         </a>
                         <a href="#how-it-works"
-                            class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 transition duration-150 ease-in-out">
-                            Comment ça marche
+                            class="nav-link inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 h-16">
+                            COMMENT ÇA MARCHE
                         </a>
                         <a href="#testimonials"
-                            class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 transition duration-150 ease-in-out">
-                            Témoignages
+                            class="nav-link inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 h-16">
+                            TÉMOIGNAGES
+                        </a>
+                        <a href="{{ route('pricing') }}"
+                            class="nav-link inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 h-16">
+                            TARIFS
+                        </a>
+                        <a href="{{ route('contact') }}"
+                            class="nav-link inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 h-16">
+                            CONTACT
                         </a>
                     </div>
                 </div>
+
                 <div class="hidden sm:ml-6 sm:flex sm:items-center">
                     @if (Route::has('login'))
                         @auth
@@ -71,6 +141,8 @@
                         @endauth
                     @endif
                 </div>
+
+                <!-- Hamburger -->
                 <div class="-mr-2 flex items-center sm:hidden">
                     <button @click="open = !open"
                         class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
@@ -86,6 +158,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Responsive Navigation Menu -->
         <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
             <div class="pt-2 pb-3 space-y-1">
                 <a href="#features"
@@ -100,7 +174,16 @@
                     class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition duration-150 ease-in-out">
                     Témoignages
                 </a>
+                <a href="{{ route('pricing') }}"
+                    class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition duration-150 ease-in-out">
+                    Tarifs
+                </a>
+                <a href="{{ route('contact') }}"
+                    class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition duration-150 ease-in-out">
+                    Contact
+                </a>
             </div>
+
             <div class="pt-4 pb-3 border-t border-gray-200">
                 <div class="flex items-center px-4 space-x-3">
                     @if (Route::has('login'))
@@ -472,7 +555,7 @@
                     </a>
                 </div>
                 <div class="ml-3 inline-flex rounded-md shadow">
-                    <a href="#features"
+                    <a href="{{ route('pricing') }}"
                         class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                         En savoir plus
                     </a>

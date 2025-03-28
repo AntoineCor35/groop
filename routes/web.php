@@ -9,6 +9,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/pricing', function () {
+    return view('pages.pricing');
+})->name('pricing');
+
+Route::get('/contact', function () {
+    return view('pages.contact');
+})->name('contact');
+
 Route::get('/dashboard', [EntitiesController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
