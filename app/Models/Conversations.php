@@ -33,11 +33,11 @@ class Conversations extends Model
 
     public function comments(): HasMany
     {
-        return $this->hasMany(Comments::class);
+        return $this->hasMany(Comments::class, 'conversation_id');
     }
 
     public function project(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Projects::class);
+        return $this->belongsTo(\App\Models\Projects::class, 'project_id');
     }
 }

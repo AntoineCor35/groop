@@ -95,9 +95,9 @@
                                 DASHBOARD
                             </a>
 
-                            <a href="#"
-                                class="nav-link inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('groups.*') ? 'border-black text-black font-medium active' : 'border-transparent text-gray-500 hover:text-gray-700' }} h-16">
-                                MES GROUPES
+                            <a href="{{ route('my-projects') }}"
+                                class="nav-link inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('my-projects') || request()->routeIs('groups.*') ? 'border-black text-black font-medium active' : 'border-transparent text-gray-500 hover:text-gray-700' }} h-16">
+                                MES PROJETS
                             </a>
 
                             <a href="#"
@@ -174,9 +174,9 @@
                         DASHBOARD
                     </a>
 
-                    <a href="#"
-                        class="{{ request()->routeIs('groups.*') ? 'border-l-4 border-black text-black bg-gray-50' : 'border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
-                        MES GROUPES
+                    <a href="{{ route('my-projects') }}"
+                        class="{{ request()->routeIs('my-projects') || request()->routeIs('groups.*') ? 'border-l-4 border-black text-black bg-gray-50' : 'border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
+                        MES PROJETS
                     </a>
 
                     <a href="#"
