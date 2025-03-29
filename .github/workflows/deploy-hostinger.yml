@@ -64,7 +64,7 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           REMOTE_PORT: 65002
           SOURCE: ./
-          TARGET: /home/u637719845/public_html/groop.kindr.fr/
+          TARGET: /home/u637719845/domains/groop.kindr.fr
           EXCLUDE: "**/.git*,**/.git*/**,**/node_modules/**,**/tests/**,**/storage/framework/cache/**,**/storage/logs/**,**/vendor/bin/**,**/.github/**,**/.env.example,**/.gitignore,**/README.md"
 
       - name: Setup SSH key for remote commands
