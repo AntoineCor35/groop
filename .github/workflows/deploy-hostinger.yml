@@ -2,11 +2,12 @@ name: Deploy to Hostinger
 
 on:
   push:
-    branches: [main] # Remplacez par 'master' si c'est votre branche principale
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -14,7 +15,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2" # Mise à jour vers PHP 8.2 pour satisfaire les dépendances
+          php-version: "8.2"
           extensions: mbstring, dom, zip, pdo, pdo_mysql, gd, exif, pcntl, bcmath, soap
           coverage: none
 
@@ -28,7 +29,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18" # Mise à jour de Node.js vers une version plus récente
+          node-version: "18"
           cache: "npm"
 
       - name: Install NPM dependencies
@@ -48,15 +49,12 @@ jobs:
       - name: Generate application key
         run: php artisan key:generate --force
 
-      - name: Optimize
+      - name: Optimize Laravel
         run: |
           php artisan optimize
           php artisan view:cache
           php artisan route:cache
           php artisan config:cache
-          
-      - name: DEBUG remote path
-        run: echo "REMOTE_PATH = ${{ secrets.REMOTE_PATH }}"
 
       - name: Deploy to Hostinger via SSH
         uses: easingthemes/ssh-deploy@main
@@ -68,11 +66,6 @@ jobs:
           SOURCE: ./
           TARGET: /home/u637719845/public_html/groop.kindr.fr/
           EXCLUDE: "**/.git*,**/.git*/**,**/node_modules/**,**/tests/**,**/storage/framework/cache/**,**/storage/logs/**,**/vendor/bin/**,**/.github/**,**/.env.example,**/.gitignore,**/README.md"
-      
-        env:
-          COMPOSER_PROCESS_TIMEOUT: 0
-          COMPOSER_NO_INTERACTION: 1
-          COMPOSER_NO_AUDIT: 1
 
       - name: Setup SSH key for remote commands
         run: |
@@ -80,21 +73,23 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-
-      - name: Post-deploy – setup Laravel
+      - name: Post-deploy – Laravel setup
         run: |
           ssh -i ~/.ssh/id_rsa -p 65002 -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} << 'EOF'
+            export PATH="$HOME/bin:$PATH"
             cd /home/u637719845/public_html/groop.kindr.fr
-      
+
+            # Créer les dossiers nécessaires et fixer les permissions
+            mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cache
+            chmod -R 775 storage bootstrap/cache
+
+            # Installer les dépendances PHP avec Composer 2 local
             composer install --no-dev --optimize-autoloader
+
+            # Exécuter les commandes Laravel
             php artisan migrate --force
             php artisan db:seed --force
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
           EOF
-
-
-      # Si vous avez encore besoin d'exécuter des commandes post-déploiement (optionnel)
-      # Vous pouvez créer un script PHP pour exécuter ces commandes via le navigateur
-      # ou utiliser le panneau de contrôle Hostinger
