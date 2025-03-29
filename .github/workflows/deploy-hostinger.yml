@@ -61,7 +61,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          REMOTE_PORT: 22 # Default SSH port
+          REMOTE_PORT: 65002 # Default SSH port
           SOURCE: ./
           TARGET: ${{ secrets.REMOTE_PATH }}/
           EXCLUDE: |
