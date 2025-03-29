@@ -66,7 +66,7 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           REMOTE_PORT: 65002
           SOURCE: ./
-          TARGET: ${{ secrets.REMOTE_PATH }}/
+          TARGET: /home/u637719845/public_html/groop.kindr.fr/
           EXCLUDE: "**/.git* **/.git*/** **/node_modules/** **/tests/** **/storage/framework/cache/** **/storage/logs/** **/vendor/bin/** **/.github/** **/.env.example** **/.gitignore** **/README.md**"
           
         env:
