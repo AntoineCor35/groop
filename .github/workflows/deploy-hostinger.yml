@@ -64,18 +64,8 @@ jobs:
           REMOTE_PORT: 65002 # Default SSH port
           SOURCE: ./
           TARGET: ${{ secrets.REMOTE_PATH }}/
-          EXCLUDE: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/tests/**
-            **/storage/framework/cache/**
-            **/storage/logs/**
-            **/vendor/bin/**
-            **/.github/**
-            **/.env.example
-            .gitignore
-            README.md
+          EXCLUDE: "**/.git* **/.git*/** **/node_modules/** **/tests/** **/storage/framework/cache/** **/storage/logs/** **/vendor/bin/** **/.github/** **/.env.example .gitignore README.md"
+
         env:
           COMPOSER_PROCESS_TIMEOUT: 0
           COMPOSER_NO_INTERACTION: 1
