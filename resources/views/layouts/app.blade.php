@@ -77,7 +77,7 @@
 <body class="font-sans antialiased text-gray-900 bg-white">
     <div class="min-h-screen bg-white">
         <!-- Navigation principale - fixe pour toutes les pages -->
-        <nav class="bg-white shadow-sm" x-data="{ open: false }">
+        <nav class="bg-white shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex">
@@ -95,9 +95,9 @@
                                 DASHBOARD
                             </a>
 
-                            <a href="#"
-                                class="nav-link inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('groups.*') ? 'border-black text-black font-medium active' : 'border-transparent text-gray-500 hover:text-gray-700' }} h-16">
-                                MES GROUPES
+                            <a href="{{ route('my-projects') }}"
+                                class="nav-link inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('my-projects') || request()->routeIs('groups.*') ? 'border-black text-black font-medium active' : 'border-transparent text-gray-500 hover:text-gray-700' }} h-16">
+                                MES PROJETS
                             </a>
 
                             <a href="#"
@@ -116,9 +116,9 @@
 
                     <!-- Dropdown du profil -->
                     <div class="hidden sm:flex sm:items-center">
-                        <div class="ml-3 relative" x-data="{ open: false }">
+                        <div class="ml-3 relative">
                             <div>
-                                <button @click="open = !open"
+                                <button data-dropdown-toggle="user-dropdown"
                                     class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition duration-150 ease-in-out">
                                     <div>{{ Auth::user()->name }}</div>
                                     <div class="ml-1">
@@ -131,9 +131,8 @@
                                     </div>
                                 </button>
                             </div>
-                            <div x-show="open" @click.away="open = false"
-                                class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
-                                style="display: none;">
+                            <div id="user-dropdown"
+                                class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5">
                                 <a href="{{ route('profile.edit') }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     {{ __('Profile') }}
@@ -151,15 +150,13 @@
 
                     <!-- Hamburger -->
                     <div class="-mr-2 flex items-center sm:hidden">
-                        <button @click="open = !open"
+                        <button id="mobile-menu-button"
                             class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                             <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
-                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16" />
-                                <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden"
-                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12" />
+                                <path id="mobile-menu-icon-open" class="inline-flex" stroke-linecap="round"
+                                    stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                <path id="mobile-menu-icon-close" class="hidden" stroke-linecap="round"
+                                    stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
@@ -167,16 +164,16 @@
             </div>
 
             <!-- Responsive Navigation Menu -->
-            <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
+            <div id="mobile-menu" class="hidden sm:hidden">
                 <div class="pt-2 pb-3 space-y-1">
                     <a href="{{ route('dashboard') }}"
                         class="{{ request()->routeIs('dashboard') ? 'border-l-4 border-black text-black bg-gray-50' : 'border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
                         DASHBOARD
                     </a>
 
-                    <a href="#"
-                        class="{{ request()->routeIs('groups.*') ? 'border-l-4 border-black text-black bg-gray-50' : 'border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
-                        MES GROUPES
+                    <a href="{{ route('my-projects') }}"
+                        class="{{ request()->routeIs('my-projects') || request()->routeIs('groups.*') ? 'border-l-4 border-black text-black bg-gray-50' : 'border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
+                        MES PROJETS
                     </a>
 
                     <a href="#"
@@ -236,6 +233,35 @@
 
     <!-- Scripts empilés -->
     @stack('scripts')
+
+    <script>
+        // Initialisation du menu mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
+            const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    const isHidden = mobileMenu.classList.contains('hidden');
+                    if (isHidden) {
+                        mobileMenu.classList.remove('hidden');
+                        mobileMenuIconOpen.classList.add('hidden');
+                        mobileMenuIconOpen.classList.remove('inline-flex');
+                        mobileMenuIconClose.classList.remove('hidden');
+                        mobileMenuIconClose.classList.add('inline-flex');
+                    } else {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuIconOpen.classList.remove('hidden');
+                        mobileMenuIconOpen.classList.add('inline-flex');
+                        mobileMenuIconClose.classList.add('hidden');
+                        mobileMenuIconClose.classList.remove('inline-flex');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

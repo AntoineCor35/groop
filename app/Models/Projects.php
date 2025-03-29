@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\Comments;
+use App\Models\Conversations;
 
 class Projects extends Model implements HasMedia
 {
@@ -28,6 +31,7 @@ class Projects extends Model implements HasMedia
         'icon',
         'custom_icon',
         'image_id',
+        'owner_id',
     ];
 
     /**
@@ -49,6 +53,7 @@ class Projects extends Model implements HasMedia
         'id' => 'integer',
         'group_id' => 'integer',
         'image_id' => 'integer',
+        'owner_id' => 'integer',
     ];
 
     /**
@@ -98,12 +103,12 @@ class Projects extends Model implements HasMedia
 
     public function applications(): HasMany
     {
-        return $this->hasMany(Applications::class);
+        return $this->hasMany(Applications::class, 'project_id');
     }
 
     public function conversations(): HasMany
     {
-        return $this->hasMany(Conversations::class);
+        return $this->hasMany(Conversations::class, 'project_id');
     }
 
     public function projectLinks(): HasMany
@@ -114,6 +119,21 @@ class Projects extends Model implements HasMedia
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'projects_user', 'project_id', 'user_id');
+    }
+
+    /**
+     * Récupère uniquement les membres réguliers du projet (non admin, non modérateur)
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function regularMembers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'projects_user', 'project_id', 'user_id')
+            ->where(function ($query) {
+                $query->where('role', '!=', 'Admin')
+                    ->where('role', '!=', 'Modérateur')
+                    ->orWhereNull('role');
+            });
     }
 
     public function tags(): BelongsToMany
@@ -129,6 +149,31 @@ class Projects extends Model implements HasMedia
     public function image(): BelongsTo
     {
         return $this->belongsTo(\Spatie\MediaLibrary\MediaCollections\Models\Media::class, 'image_id');
+    }
+
+    /**
+     * Get the owner of the project.
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * Get all comments associated with the project's conversations.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function comments()
+    {
+        return $this->hasManyThrough(
+            Comments::class,
+            Conversations::class,
+            'project_id', // Foreign key on conversations table
+            'conversation_id', // Foreign key on comments table
+            'id', // Local key on projects table
+            'id' // Local key on conversations table
+        );
     }
 
     /**

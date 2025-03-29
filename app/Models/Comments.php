@@ -41,6 +41,6 @@ class Comments extends Model
 
     public function conversation(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Conversations::class);
+        return $this->belongsTo(\App\Models\Conversations::class, 'conversation_id');
     }
 }
