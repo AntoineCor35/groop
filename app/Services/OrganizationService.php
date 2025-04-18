@@ -16,6 +16,18 @@ class OrganizationService
      */
     public static function getUserEntities(User $user): Collection
     {
+        // Si l'utilisateur est admin, retourner toutes les entités avec leurs relations
+        if ($user->is_admin || $user->admin || $user->role === 'Admin' || $user->attributes->role === 'Admin') {
+            return Entities::with(['promotions' => function ($query) {
+                $query->with(['groups' => function ($query) {
+                    $query->with(['projects' => function ($query) {
+                        $query->with(['tags', 'media']);
+                    }]);
+                }]);
+            }])->get();
+        }
+
+        // Pour les utilisateurs non-admin, garder la logique existante
         // Récupérer les entités auxquelles l'utilisateur a accès directement
         $userEntities = $user->entities()->with(['promotions' => function ($query) use ($user) {
             // Pour chaque entité, ne récupérer que les promotions auxquelles l'utilisateur a accès
@@ -77,6 +89,11 @@ class OrganizationService
      */
     public static function userHasAccessToGroup(User $user, int $groupId): bool
     {
+        // Si l'utilisateur est admin, il a accès à tous les groupes
+        if ($user->is_admin || $user->admin || $user->role === 'Admin' || $user->attributes->role === 'Admin') {
+            return true;
+        }
+
         return $user->groups()->where('groups.id', $groupId)->exists() ||
             \App\Models\Groups::where('id', $groupId)->whereDoesntHave('users')->exists();
     }

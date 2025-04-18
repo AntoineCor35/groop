@@ -8,7 +8,7 @@
     <div class="flex flex-col md:flex-row gap-6">
         <!-- Panneau latéral de l'organisation -->
         <div class="w-full md:w-1/4">
-            <x-organization-sidebar :entities="$entities" :is-admin="$isAdmin" />
+            <livewire:organization-sidebar :entities="$entities" :is-admin="$isAdmin" />
         </div>
 
         <!-- Contenu principal - Composant Blade -->
@@ -18,15 +18,4 @@
             </div>
         </div>
     </div>
-
-    @push('scripts')
-        <script>
-            console.log('Dashboard script loading...');
-
-            // Écouter les changements de groupe
-            window.addEventListener('group-selected', (e) => {
-                console.log('Dashboard caught group-selected event:', e.detail);
-            });
-        </script>
-    @endpush
 </x-app-layout>
