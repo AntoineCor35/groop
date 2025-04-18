@@ -17,6 +17,7 @@ class DashboardController extends Controller
         // Récupérer les entités de l'utilisateur
         $entities = OrganizationService::getUserEntities($user);
 
+
         // Préchargement des relations
         $entities = $entities->map(function ($entity) {
             return $entity->load([
@@ -33,8 +34,7 @@ class DashboardController extends Controller
                 }
             ]);
         });
-
-        $isAdmin = $user && ($user->is_admin || $user->admin || $user->role === 'admin');
+        $isAdmin = $user && ($user->is_admin || $user->admin || $user->role === 'Admin' || $user->attributes->role === 'Admin');
 
         // Convertir les entités en tableau pour éviter les problèmes de sérialisation
         $entities = $entities->map(function ($entity) {

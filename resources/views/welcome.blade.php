@@ -22,8 +22,6 @@
             }
         }
     </script>
-    <!-- Alpine.js -->
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
         :root {
@@ -671,13 +669,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Alpine.js Initialization -->
-    <script>
-        document.addEventListener('alpine:init', () => {
-            // Vous pouvez ajouter des composants Alpine.js personnalisés ici
-        });
-    </script>
 </body>
 
 </html>
