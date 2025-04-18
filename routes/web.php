@@ -7,6 +7,7 @@ use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ApplicationsController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,7 +24,7 @@ Route::get('/contact', function () {
 
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
-Route::get('/dashboard', [EntitiesController::class, 'index'])
+Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
