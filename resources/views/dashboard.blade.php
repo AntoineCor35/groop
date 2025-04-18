@@ -11,24 +11,21 @@
             <x-organization-sidebar :entities="$entities" :is-admin="$isAdmin" />
         </div>
 
-        <!-- Contenu principal - Composant Livewire -->
+        <!-- Contenu principal - Composant Blade -->
         <div class="w-full md:w-3/4">
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
-                <livewire:group-projects wire:key="projects" />
+                <x-group-projects :entities="$entities" />
             </div>
         </div>
     </div>
 
     @push('scripts')
         <script>
-            document.addEventListener('alpine:init', () => {
-                // Écouter les changements de groupe
-                window.addEventListener('group-selected', (e) => {
-                    // On peut maintenant dispatcher l'événement vers le composant Livewire des projets
-                    Livewire.dispatch('groupSelected', {
-                        groupId: e.detail.groupId
-                    });
-                });
+            console.log('Dashboard script loading...');
+
+            // Écouter les changements de groupe
+            window.addEventListener('group-selected', (e) => {
+                console.log('Dashboard caught group-selected event:', e.detail);
             });
         </script>
     @endpush
