@@ -71,6 +71,7 @@
         <template x-for="entity in entities" :key="entity.id">
             <div x-show="selectedEntityId == entity.id">
                 <div class="flex justify-between items-center mb-3">
+                    {{-- <button @click="console.log(entity.id)" :key="entity.id">test display entity id</button> --}}
                     <h4 class="text-sm font-medium text-gray-700">Promotions</h4>
                     <button x-show="isAdmin" class="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
                         title="Créer une promotion">
