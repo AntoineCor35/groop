@@ -78,4 +78,15 @@ class User extends Authenticatable
     {
         return $this->belongsTo(\App\Models\Media::class);
     }
+
+    /**
+     * Check if the user has a specific role
+     *
+     * @param string $roleName
+     * @return bool
+     */
+    public function hasRole(string $roleName): bool
+    {
+        return $this->roles()->where('name', $roleName)->exists();
+    }
 }
