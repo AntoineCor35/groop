@@ -34,37 +34,6 @@ class DashboardController extends Controller
             ]);
         });
 
-        // Log pour déboguer
-        Log::info('Données chargées:', [
-            'nombre_entities' => $entities->count(),
-            'structure' => $entities->map(function ($entity) {
-                return [
-                    'entity_id' => $entity->id,
-                    'entity_name' => $entity->name,
-                    'promotions' => $entity->promotions->map(function ($promotion) {
-                        return [
-                            'promotion_id' => $promotion->id,
-                            'promotion_name' => $promotion->name,
-                            'groups' => $promotion->groups->map(function ($group) {
-                                return [
-                                    'group_id' => $group->id,
-                                    'group_name' => $group->name,
-                                    'projects' => $group->projects->map(function ($project) {
-                                        return [
-                                            'project_id' => $project->id,
-                                            'project_name' => $project->name,
-                                            'has_media' => $project->media->isNotEmpty(),
-                                            'tags_count' => $project->tags->count()
-                                        ];
-                                    })->toArray()
-                                ];
-                            })->toArray()
-                        ];
-                    })->toArray()
-                ];
-            })->toArray()
-        ]);
-
         $isAdmin = $user && ($user->is_admin || $user->admin || $user->role === 'admin');
 
         // Convertir les entités en tableau pour éviter les problèmes de sérialisation
@@ -101,12 +70,19 @@ class DashboardController extends Controller
                                             'name' => $tag->name
                                         ];
                                     })->toArray(),
-                                    'media' => array_merge(
-                                        // Ajouter la cover si elle existe
-                                        $project->cover ? [$project->cover] : [],
-                                        // Ajouter la galerie
-                                        $project->gallery ?? []
-                                    ),
+                                    'media' => $project->getMedia('gallery')->map(function ($media) {
+                                        try {
+                                            return [
+                                                'id' => $media->id,
+                                                'url' => $media->getUrl(),
+                                                'original_url' => $media->getUrl(),
+                                                'thumb_url' => $media->getUrl('thumb'),
+                                                'preview_url' => $media->getUrl('preview')
+                                            ];
+                                        } catch (\Exception $e) {
+                                            return null;
+                                        }
+                                    })->filter()->values()->toArray()
                                 ];
                             })->toArray();
 
@@ -125,25 +101,6 @@ class DashboardController extends Controller
                 })->toArray()
             ];
         })->toArray();
-
-        // Log pour vérifier la structure finale
-        Log::info('Structure finale des entités:', [
-            'entities' => array_map(function ($entity) {
-                return [
-                    'id' => $entity['id'],
-                    'name' => $entity['name'],
-                    'promotions_count' => count($entity['promotions']),
-                    'groups_count' => array_reduce($entity['promotions'], function ($carry, $promotion) {
-                        return $carry + count($promotion['groups']);
-                    }, 0),
-                    'projects_count' => array_reduce($entity['promotions'], function ($carry, $promotion) {
-                        return $carry + array_reduce($promotion['groups'], function ($carry, $group) {
-                            return $carry + count($group['projects']);
-                        }, 0);
-                    }, 0)
-                ];
-            }, $entities)
-        ]);
 
         return view('dashboard', [
             'entities' => $entities,

@@ -7,12 +7,9 @@
     currentGroupId: null,
     loading: false,
 
-    init() {
-        console.log('Sidebar initialized');
-    },
+    init() {},
 
     togglePromotion(id) {
-        console.log('Toggling promotion', id);
         const index = this.expandedPromotions.indexOf(id);
         if (index === -1) {
             this.expandedPromotions.push(id);
@@ -22,16 +19,13 @@
     },
 
     selectGroup(groupId) {
-        console.log('Sélection du groupe:', groupId);
         this.currentGroupId = groupId;
         this.loading = true;
 
-        // Émettre l'événement avec l'ID du groupe
         window.dispatchEvent(new CustomEvent('group-selected', {
             detail: parseInt(groupId)
         }));
 
-        // Réinitialiser l'état de chargement après un court délai
         setTimeout(() => {
             this.loading = false;
         }, 300);
@@ -43,7 +37,18 @@
 
     <!-- Entity Selection Header -->
     <div class="p-4 border-b border-gray-200 bg-gray-50">
-        <h3 class="text-sm font-medium text-gray-500 mb-2">Organisation</h3>
+        <div class="flex justify-between items-center mb-2">
+            <h3 class="text-sm font-medium text-gray-500">Organisation</h3>
+            <button class="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
+                title="Créer une organisation">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                        clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
         <div class="relative">
             <select x-model="selectedEntityId"
                 class="w-full bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
@@ -66,6 +71,18 @@
     <div class="p-4">
         <template x-for="entity in entities" :key="entity.id">
             <div x-show="selectedEntityId == entity.id">
+                <div class="flex justify-between items-center mb-3">
+                    <h4 class="text-sm font-medium text-gray-700">Promotions</h4>
+                    <button class="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
+                        title="Créer une promotion">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
                 <ul class="space-y-2">
                     <template x-for="promotion in entity.promotions" :key="promotion.id">
                         <li class="bg-white rounded-md border border-gray-200">
@@ -99,6 +116,18 @@
                                 x-transition:leave="transition ease-in duration-150"
                                 x-transition:leave-start="opacity-100 transform translate-y-0"
                                 x-transition:leave-end="opacity-0 transform -translate-y-2">
+                                <div class="flex justify-between items-center px-3 py-2">
+                                    <h5 class="text-sm font-medium text-gray-600">Groupes</h5>
+                                    <button class="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
+                                        title="Créer un groupe">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600"
+                                            viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
                                 <ul class="p-2 space-y-1">
                                     <template x-for="group in promotion.groups" :key="group.id">
                                         <li>
