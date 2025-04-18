@@ -6,262 +6,213 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Grōōp') }}</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <style>
-        :root {
-            --color-primary: #000000;
-            --color-secondary: #4F46E5;
-            --color-accent: #818CF8;
+        [x-cloak] {
+            display: none !important;
         }
 
-        .bg-secondary {
-            background-color: var(--color-secondary);
+        .sidebar-icon {
+            @apply h-12 w-12 flex items-center justify-center rounded-xl cursor-pointer;
+            @apply hover:bg-gray-100 transition-all duration-200 ease-linear;
         }
 
-        .hover\:bg-secondary\/90:hover {
-            background-color: rgba(79, 70, 229, 0.9);
+        .sidebar-icon.active {
+            @apply bg-gray-100;
         }
 
-        .text-secondary {
-            color: var(--color-secondary);
+        .sidebar-tooltip {
+            @apply absolute w-auto p-2 m-2 min-w-max left-14 rounded-md shadow-md text-white bg-gray-900 text-xs font-bold transition-all duration-100 scale-0 origin-left;
         }
 
-        .border-secondary {
-            border-color: var(--color-secondary);
-        }
-
-        .hover\:border-secondary:hover {
-            border-color: var(--color-secondary);
-        }
-
-        .active-nav-link {
-            border-bottom: 2px solid var(--color-primary);
-            color: var(--color-primary);
-            font-weight: 500;
-        }
-
-        .nav-link {
-            position: relative;
-            transition: all 0.2s;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--color-primary);
-            transition: width 0.3s;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .nav-link.active::after {
-            width: 100%;
+        .sidebar-icon:hover .sidebar-tooltip {
+            @apply scale-100;
         }
     </style>
 </head>
 
-<body class="font-sans antialiased text-gray-900 bg-white">
-    <div class="min-h-screen bg-white">
-        <!-- Navigation principale - fixe pour toutes les pages -->
-        <nav class="bg-white shadow-sm">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex">
-                        <!-- Logo -->
-                        <div class="flex-shrink-0 flex items-center">
-                            <a href="{{ route('dashboard') }}">
-                                <x-application-logo class="block h-10 w-auto" />
-                            </a>
+<body class="font-sans antialiased">
+    <div class="flex h-screen overflow-hidden" x-data="{ mobileMenuOpen: false, activeItem: '{{ request()->routeIs('dashboard') ? 'dashboard' : (request()->routeIs('my-projects') ? 'projects' : (request()->routeIs('candidature.*') ? 'candidature' : (request()->is('admin*') ? 'admin' : 'dashboard'))) }}' }">
+        <!-- Mobile menu trigger -->
+        <div class="fixed top-4 left-4 z-50 lg:hidden">
+            <button @click="mobileMenuOpen = !mobileMenuOpen"
+                class="flex items-center justify-center w-10 h-10 rounded-md border border-gray-200 bg-white text-gray-500 hover:bg-gray-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <span class="sr-only">Menu</span>
+            </button>
+        </div>
+
+        <!-- Mobile sidebar -->
+        <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false"
+            x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-x-full"
+            x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 -translate-x-full"
+            class="fixed inset-0 z-40 lg:hidden">
+            <div class="relative flex flex-col w-64 h-full bg-white border-r">
+                <div class="p-4 border-b">
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200">
+                            <span class="font-bold text-lg">G</span>
                         </div>
-
-                        <!-- Navigation Links -->
-                        <div class="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
-                            <a href="{{ route('dashboard') }}"
-                                class="nav-link inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('dashboard') ? 'border-black text-black font-medium active' : 'border-transparent text-gray-500 hover:text-gray-700' }} h-16">
-                                DASHBOARD
-                            </a>
-
-                            <a href="{{ route('my-projects') }}"
-                                class="nav-link inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('my-projects') || request()->routeIs('groups.*') ? 'border-black text-black font-medium active' : 'border-transparent text-gray-500 hover:text-gray-700' }} h-16">
-                                MES PROJETS
-                            </a>
-
-                            <a href="#"
-                                class="nav-link inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('candidature.*') ? 'border-black text-black font-medium active' : 'border-transparent text-gray-500 hover:text-gray-700' }} h-16">
-                                CANDIDATURE
-                            </a>
-
-                            @if (Auth::user() && Auth::user()->role === 'Admin')
-                                <a href="{{ url('admin') }}"
-                                    class="nav-link inline-flex items-center px-1 pt-1 border-b-2 {{ request()->is('admin*') ? 'border-black text-black font-medium active' : 'border-transparent text-gray-500 hover:text-gray-700' }} h-16">
-                                    ADMIN
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Dropdown du profil -->
-                    <div class="hidden sm:flex sm:items-center">
-                        <div class="ml-3 relative">
-                            <div>
-                                <button data-dropdown-toggle="user-dropdown"
-                                    class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition duration-150 ease-in-out">
-                                    <div>{{ Auth::user()->name }}</div>
-                                    <div class="ml-1">
-                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </button>
-                            </div>
-                            <div id="user-dropdown"
-                                class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5">
-                                <a href="{{ route('profile.edit') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    {{ __('Profile') }}
-                                </a>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit"
-                                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        {{ __('Log Out') }}
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Hamburger -->
-                    <div class="-mr-2 flex items-center sm:hidden">
-                        <button id="mobile-menu-button"
-                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                            <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                <path id="mobile-menu-icon-open" class="inline-flex" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                <path id="mobile-menu-icon-close" class="hidden" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
+                        <span class="text-lg font-semibold">{{ config('app.name', 'Grōōp') }}</span>
                     </div>
                 </div>
-            </div>
-
-            <!-- Responsive Navigation Menu -->
-            <div id="mobile-menu" class="hidden sm:hidden">
-                <div class="pt-2 pb-3 space-y-1">
+                <nav class="flex-1 overflow-y-auto p-4 space-y-2">
                     <a href="{{ route('dashboard') }}"
-                        class="{{ request()->routeIs('dashboard') ? 'border-l-4 border-black text-black bg-gray-50' : 'border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
-                        DASHBOARD
+                        class="flex items-center space-x-3 p-2 rounded-md {{ request()->routeIs('dashboard') ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        <span>Dashboard</span>
                     </a>
 
                     <a href="{{ route('my-projects') }}"
-                        class="{{ request()->routeIs('my-projects') || request()->routeIs('groups.*') ? 'border-l-4 border-black text-black bg-gray-50' : 'border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
-                        MES PROJETS
+                        class="flex items-center space-x-3 p-2 rounded-md {{ request()->routeIs('my-projects') ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <span>Mes Projets</span>
                     </a>
 
                     <a href="#"
-                        class="{{ request()->routeIs('candidature.*') ? 'border-l-4 border-black text-black bg-gray-50' : 'border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
-                        CANDIDATURE
+                        class="flex items-center space-x-3 p-2 rounded-md {{ request()->routeIs('candidature.*') ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                        </svg>
+                        <span>Candidature</span>
                     </a>
 
                     @if (Auth::user() && Auth::user()->role === 'Admin')
                         <a href="{{ url('admin') }}"
-                            class="{{ request()->is('admin*') ? 'border-l-4 border-black text-black bg-gray-50' : 'border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} block pl-3 pr-4 py-2 text-base font-medium transition duration-150 ease-in-out">
-                            ADMIN
+                            class="flex items-center space-x-3 p-2 rounded-md {{ request()->is('admin*') ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>Admin</span>
                         </a>
                     @endif
-                </div>
+                </nav>
 
-                <!-- Responsive Settings Options -->
-                <div class="pt-4 pb-3 border-t border-gray-200">
-                    <div class="mt-3 space-y-1 px-4">
-                        <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                        <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-                    </div>
-                    <div class="mt-3 space-y-1 px-2">
-                        <a href="{{ route('profile.edit') }}"
-                            class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition duration-150 ease-in-out">
-                            {{ __('Profile') }}
-                        </a>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit"
-                                class="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition duration-150 ease-in-out">
-                                {{ __('Log Out') }}
-                            </button>
-                        </form>
+                <div class="p-4 border-t">
+                    <div class="flex items-center space-x-3">
+                        @if (Auth::user() && Auth::user()->avatar)
+                            <img class="w-10 h-10 rounded-full"
+                                src="{{ asset('storage/' . Auth::user()->avatar->path) }}"
+                                alt="{{ Auth::user()->name }}">
+                        @else
+                            <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                <span class="font-medium text-sm">{{ substr(Auth::user()->name ?? 'U', 0, 2) }}</span>
+                            </div>
+                        @endif
+                        <div>
+                            <div class="font-medium text-sm">{{ Auth::user()->name }}</div>
+                            <div class="text-xs text-gray-500">{{ Auth::user()->email }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </nav>
+        </div>
 
-        {{-- <!-- Page Heading - Titre de la page (si nécessaire) -->
-        @isset($header)
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset --}}
+        <!-- Desktop sidebar -->
+        <div class="hidden lg:flex flex-col w-16 bg-gray-100 border-r">
+            <div class="flex flex-col items-center py-4 space-y-6">
+                <a href="{{ route('dashboard') }}" class="mb-6">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200">
+                        <span class="font-bold text-lg">G</span>
+                    </div>
+                </a>
 
-        <!-- Page Content -->
-        <main class="py-6">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <a href="{{ route('dashboard') }}" @click="activeItem = 'dashboard'"
+                    :class="{ 'bg-blue-600 text-white': activeItem === 'dashboard', 'text-gray-500 hover:bg-gray-200': activeItem !== 'dashboard' }"
+                    class="flex items-center justify-center w-10 h-10 rounded-md" title="Dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                </a>
+
+                <a href="{{ route('my-projects') }}" @click="activeItem = 'projects'"
+                    :class="{ 'bg-blue-600 text-white': activeItem === 'projects', 'text-gray-500 hover:bg-gray-200': activeItem !== 'projects' }"
+                    class="flex items-center justify-center w-10 h-10 rounded-md" title="Mes Projets">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                </a>
+
+                <a href="#" @click="activeItem = 'candidature'"
+                    :class="{ 'bg-blue-600 text-white': activeItem === 'candidature', 'text-gray-500 hover:bg-gray-200': activeItem !== 'candidature' }"
+                    class="flex items-center justify-center w-10 h-10 rounded-md" title="Candidature">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                    </svg>
+                </a>
+
+                @if (Auth::user() && Auth::user()->role === 'Admin')
+                    <a href="{{ url('admin') }}" @click="activeItem = 'admin'"
+                        :class="{ 'bg-blue-600 text-white': activeItem === 'admin', 'text-gray-500 hover:bg-gray-200': activeItem !== 'admin' }"
+                        class="flex items-center justify-center w-10 h-10 rounded-md" title="Admin">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </a>
+                @endif
+            </div>
+
+            <div class="mt-auto mb-4 flex flex-col items-center">
+                @if (Auth::user() && Auth::user()->avatar)
+                    <img class="w-10 h-10 rounded-full" src="{{ asset('storage/' . Auth::user()->avatar->path) }}"
+                        alt="{{ Auth::user()->name }}">
+                @else
+                    <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span class="font-medium text-sm">{{ substr(Auth::user()->name ?? 'U', 0, 2) }}</span>
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex-1 overflow-auto bg-gray-50">
+            <main class="p-6">
                 {{ $slot }}
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
 
-    <!-- Scripts empilés -->
     @stack('scripts')
-
-    <script>
-        // Initialisation du menu mobile
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
-            const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
-
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', function() {
-                    const isHidden = mobileMenu.classList.contains('hidden');
-                    if (isHidden) {
-                        mobileMenu.classList.remove('hidden');
-                        mobileMenuIconOpen.classList.add('hidden');
-                        mobileMenuIconOpen.classList.remove('inline-flex');
-                        mobileMenuIconClose.classList.remove('hidden');
-                        mobileMenuIconClose.classList.add('inline-flex');
-                    } else {
-                        mobileMenu.classList.add('hidden');
-                        mobileMenuIconOpen.classList.remove('hidden');
-                        mobileMenuIconOpen.classList.add('inline-flex');
-                        mobileMenuIconClose.classList.add('hidden');
-                        mobileMenuIconClose.classList.remove('inline-flex');
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 
 </html>
