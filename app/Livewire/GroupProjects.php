@@ -16,6 +16,11 @@ class GroupProjects extends Component
 
     public function mount($groupId = null)
     {
+        Log::info('GroupProjects: Component mounted', [
+            'groupId' => $groupId,
+            'component_id' => $this->getId()
+        ]);
+
         if ($groupId) {
             Log::info('GroupProjects: mount avec groupId = ' . $groupId);
             $this->loadGroup($groupId);
@@ -27,13 +32,21 @@ class GroupProjects extends Component
     #[On('groupSelected')]
     public function loadGroup($groupId)
     {
-        Log::info('GroupProjects: loadGroup appelé avec groupId = ' . $groupId);
+        Log::info('GroupProjects: loadGroup appelé', [
+            'groupId' => $groupId,
+            'component_id' => $this->getId(),
+            'previous_groupId' => $this->groupId
+        ]);
 
         // Réinitialiser le groupe pour éviter d'afficher les anciens projets
         $this->group = null;
         $this->groupId = null;
 
         $user = Auth::user();
+        Log::info('GroupProjects: Vérification accès utilisateur', [
+            'user_id' => $user->id,
+            'groupId' => $groupId
+        ]);
 
         // Vérifier si l'utilisateur a accès à ce groupe
         if (!OrganizationService::userHasAccessToGroup($user, $groupId)) {
