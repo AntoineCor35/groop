@@ -15,9 +15,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @livewireStyles
 
     <style>
         [x-cloak] {
@@ -213,6 +211,7 @@
     </div>
 
     @stack('scripts')
+    @livewireScripts
 </body>
 
 </html>

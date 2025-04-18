@@ -44,15 +44,9 @@
     <div class="p-4 border-b border-gray-200 bg-gray-50">
         <div class="flex justify-between items-center mb-2">
             <h3 class="text-sm font-medium text-gray-500">Organisation</h3>
-            <button x-show="isAdmin" class="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
-                title="Créer une organisation" @click="$dispatch('open-create-entity-modal')">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 20 20"
-                    fill="currentColor">
-                    <path fill-rule="evenodd"
-                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                        clip-rule="evenodd" />
-                </svg>
-            </button>
+            @if ($isAdmin)
+                <livewire:create-entity-button />
+            @endif
         </div>
         <div class="relative">
             <select x-model="selectedEntityId"
@@ -182,6 +176,4 @@
             </div>
         </template>
     </div>
-
-    <livewire:create-entity-modal />
 </div>
