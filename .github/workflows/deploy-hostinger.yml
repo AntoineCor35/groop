@@ -82,14 +82,23 @@ jobs:
             # Créer les dossiers nécessaires et fixer les permissions
             mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cache
             chmod -R 775 storage bootstrap/cache
+            chmod -R 775 public/storage
 
             # Installer les dépendances PHP avec Composer 2 local
             composer install --no-dev --optimize-autoloader
 
+            # Nettoyer les caches
+            php artisan cache:clear
+            php artisan config:clear
+            php artisan route:clear
+            php artisan view:clear
+
             # Exécuter les commandes Laravel
             php artisan migrate --force
             php artisan db:seed --force
+            php artisan storage:link
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
+            php artisan optimize
           EOF

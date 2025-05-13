@@ -17,7 +17,12 @@ class OrganizationService
     public static function getUserEntities(User $user): Collection
     {
         // Si l'utilisateur est admin, retourner toutes les entités avec leurs relations
-        if ($user->is_admin || $user->admin || $user->role === 'Admin' || $user->attributes->role === 'Admin') {
+        if (
+            $user->is_admin ?? false ||
+            $user->admin ?? false ||
+            ($user->role ?? '') === 'Admin' ||
+            (isset($user->attributes) && ($user->attributes->role ?? '') === 'Admin')
+        ) {
             return Entities::with(['promotions' => function ($query) {
                 $query->with(['groups' => function ($query) {
                     $query->with(['projects' => function ($query) {
@@ -90,7 +95,12 @@ class OrganizationService
     public static function userHasAccessToGroup(User $user, int $groupId): bool
     {
         // Si l'utilisateur est admin, il a accès à tous les groupes
-        if ($user->is_admin || $user->admin || $user->role === 'Admin' || $user->attributes->role === 'Admin') {
+        if (
+            $user->is_admin ?? false ||
+            $user->admin ?? false ||
+            ($user->role ?? '') === 'Admin' ||
+            (isset($user->attributes) && ($user->attributes->role ?? '') === 'Admin')
+        ) {
             return true;
         }
 
