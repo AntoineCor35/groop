@@ -20,6 +20,7 @@ class Applications extends Model
         'project_id',
         'user_id',
         'commentaire',
+        'recruiter_comment',
     ];
 
     /**
