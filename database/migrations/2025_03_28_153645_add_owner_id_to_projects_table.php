@@ -15,11 +15,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->foreignId('owner_id')->nullable()->after('id')->constrained('users');
-        });
-
-        // Attribuer les propriétaires pour les projets existants
+        // Attribution des propriétaires pour les projets existants
         $projects = Projects::all();
         foreach ($projects as $project) {
             // Première tentative : chercher l'utilisateur avec une candidature "approved" la plus ancienne
@@ -67,9 +63,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->dropForeign(['owner_id']);
-            $table->dropColumn('owner_id');
-        });
+        // Suppression du drop de la colonne owner_id (déjà présente)
     }
 };
