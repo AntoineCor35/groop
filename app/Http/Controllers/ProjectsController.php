@@ -69,8 +69,9 @@ class ProjectsController extends Controller
         ])
             ->findOrFail($id);
 
-        // Vérifier si l'utilisateur a accès à ce projet
+        // Vérifier si l'utilisateur a accès à ce projet (les admins ont toujours accès)
         if (
+            $user->role !== 'Admin' &&
             !$project->users->contains($user) &&
             !OrganizationService::userHasAccessToGroup($user, $project->group_id) &&
             $project->owner_id !== $user->id
